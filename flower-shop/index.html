@@ -96,14 +96,14 @@
 	renderer.shadowMap.enabled = true;
 	renderer.shadowMap.type = THREE.PCFShadowMap;
     scene = new THREE.Scene();
-	var scene_length = 23912;
-    camera = new THREE.PerspectiveCamera(35.0, aspr, 10, scene_length);
+	var scene_length = 26006;
+    camera = new THREE.PerspectiveCamera(45, aspr, 10, scene_length);
     scene.add(camera);
     light1 = new THREE.AmbientLight(0xbbbbbb);
     scene.add( light1 );
     light2 = new THREE.DirectionalLight(0xcccccc, 1.0);
-	tpos =new THREE.Vector3( 402.11944151964644,370.2000000000007,60.27386222177416 );
-	sunvec = new THREE.Vector3( -0.8830724824461383,0.46491238260873885,0.06355680328242243 );
+	tpos =new THREE.Vector3( 252.61538227521885,321.2000000000007,7.670582117253387 );
+	sunvec = new THREE.Vector3( -0.8332109788019673,0.5445511417351397,0.09603915263486701 );
 	sunvec.setLength( scene_length / 2 );
     light2.position.set(sunvec.x + tpos.x , sunvec.y + tpos.y, sunvec.z + tpos.z);
 	light2.target.position.set(tpos);
@@ -161,8 +161,8 @@
 	controls.maxPolarAngle = Math.PI; 
 	controls.minDistance = 0;
 	controls.maxDistance = Infinity;
-	controls.object.position.set( -1887.921,360.849,-265.398 );
-	controls.target = new THREE.Vector3( -34.941,360.849,60.589 ); 
+	controls.object.position.set( -1812.004,346.786,-269.472 );
+	controls.target = new THREE.Vector3( 243.238,346.786,92.098 ); 
 	controls.lookaround = false;
 	controls.flyspeed = 50;
 	
@@ -171,7 +171,7 @@
 	
 	
     // init materials
-	codeclips = "vec3 clipDIST = vec3( 1671.555,740.400,1541.341 ) + vec3(40,40,40);vec3 clipBASE = vec3( -433.658,-0.000,-710.397 ) - vec3(20,20,20);"
+	codeclips = "vec3 clipDIST = vec3( 1970.563,710.400,1541.341 ) + vec3(40,40,40);vec3 clipBASE = vec3( -732.666,-34.000,-763.000 ) - vec3(20,20,20);"
     for(var i=0; i < mat.length; i++){
      materials[i] = new THREE.ShaderMaterial( {
 		uniforms: THREE.UniformsUtils.merge([
@@ -433,7 +433,7 @@ if( SUPPORTS_LOCAL_STORAGE ){
 	};
 	var skpage = gui.add( parameters, '场景选择');
 	scenetable = '<table border="5" bordercolor="#ffffff" style="table-layout:fixed;" width="100%" height="100%"><tr>'
-+ '<td class="lt-cell" onclick="scenechange([1237.897,740.400,830.945],[402.119,370.200,60.274],45)">环绕观察视图</td>'
++ '<td class="lt-cell" onclick="scenechange([1237.897,676.400,778.341],[252.615,321.200,7.671],45)">环绕观察视图</td>'
 + '</tr></table>';
 	document.getElementById('sceneselect').innerHTML = scenetable;
 	var sklookaround = gui.add( parameters, 'lookaround' ).name('环绕观察').listen();
