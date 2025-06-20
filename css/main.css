@@ -523,10 +523,10 @@ img.pull-left {
 }
 
 #loader:before {
-	content: "";
+	content: url();
 	display: block;
-	height: 60px;
-	width: 60px;
+	height: 80px;
+	width: 80px;
 	-webkit-animation: rotate .9s infinite linear;
 	animation: rotate .9s infinite linear;
 	border: 10px solid #FFFFFF;
