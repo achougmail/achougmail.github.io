@@ -513,23 +513,23 @@ img.pull-left {
 }
 
 #loader {
+	content: url(../images/loading-logo.png);
 	position: absolute;
 	left: 50%;
 	top: 50%;
-	width: 60px;
-	height: 60px;
+	width: 100px;
 	margin: -30px 0 0 -30px;
 	padding: 0;
 }
 
 #loader:before {
-	content: url();
+	content: "";
 	display: block;
 	height: 80px;
 	width: 80px;
 	-webkit-animation: rotate .9s infinite linear;
 	animation: rotate .9s infinite linear;
-	border: 10px solid #FFFFFF;
+	border: 10px solid #48a3a3;
 	border-right-color: transparent;
 	border-radius: 50%;
 }
@@ -1423,6 +1423,20 @@ header .logo a {
 	background: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.8) 100%);
 	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#00000000', endColorstr='#cc000000', GradientType=0);
 }
+
+.intro-vr{
+	position:absolute;
+	bottom: 0;
+	z-index:1;
+}
+
+.intro-logo {
+	position: absolute;
+	left: 15%;
+	bottom:0;
+	z-index: 2;
+}
+
 
 /* ------------------------------------------------------------------- 
  * responsive:
