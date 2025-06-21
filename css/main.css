@@ -515,7 +515,7 @@ img.pull-left {
 #loader {
 	content: url(../images/loading-logo.png);
 	position: absolute;
-	left: 48%;
+	left: 47%;
 	top: 50%;
 	width: 100px;
 	margin: -30px 0 0 -30px;
@@ -1120,10 +1120,10 @@ header .logo a {
 	padding: 0;
 	outline: 0;
 	border: none;
-	width: 96px;
-	height: 20px;
+	width: 120px;
+	height: 25px;
 	background: url("../images/logo.png") no-repeat center;
-	background-size: 96px 20px;
+	background-size: 120px 25px;
 	font: 0/0 a;
 	text-shadow: none;
 	color: transparent;
@@ -1213,7 +1213,7 @@ header .logo a {
 
 .menu-toggle.is-clicked span::before,
 .menu-toggle.is-clicked span::after {
-	background-color: white;
+	background-color: #f9da4f;
 }
 
 .menu-toggle.is-clicked span::before {
@@ -1301,12 +1301,12 @@ header .logo a {
 }
 
 #menu-nav-wrap .nav-list li a {
-	color: rgba(255, 255, 255, 0.25);
+	color: rgba(255, 255, 255, 0.487);
 }
 
 #menu-nav-wrap .nav-list li a:hover,
 #menu-nav-wrap .nav-list li a:focus {
-	color: white;
+	color: #f9da4f;
 }
 
 #menu-nav-wrap .sponsor-text span {
@@ -1426,13 +1426,16 @@ header .logo a {
 
 .intro-vr{
 	position:absolute;
-	bottom: 0;
+	left:0;
+	right: 0;
+	bottom:0;
 	z-index:1;
 }
 
 .intro-logo {
-	position: absolute;
-	left: 15%;
+	position:absolute;
+	left: 0;
+	right: 0;
 	bottom:0;
 	z-index: 2;
 }
