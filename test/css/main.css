@@ -480,13 +480,13 @@ img.pull-left {
 }
 
 .pace .pace-progress {
-	background: #FFFFFF;
+	background: #48a3a3;
 	position: fixed;
 	z-index: 901;
 	top: 0;
 	right: 100%;
 	width: 100%;
-	height: 6px;
+	height: 5px;
 }
 
 
@@ -515,10 +515,11 @@ img.pull-left {
 #loader {
 	content: url(../images/loading-logo.png);
 	position: absolute;
-	left: 47%;
-	top: 50%;
+	left: 40%;
+	top: 30%;
 	width: 100px;
-	margin: -30px 0 0 -30px;
+	height: 100px;
+	margin: 0;
 	padding: 0;
 }
 
@@ -729,7 +730,7 @@ input[type="button"] {
 	display: inline-block;
 	font-family: "roboto-black", sans-serif;
 	font-size: 1.4rem;
-	text-transform: uppercase;
+	/* text-transform: uppercase; */
 	letter-spacing: .3rem;
 	height: 5.4rem;
 	line-height: 5.4rem;
@@ -1354,7 +1355,7 @@ header .logo a {
  * ------------------------------------------------------------------- */
 #intro {
 	position: relative;
-	background-image: url(../images/intro-bg.jpg);
+	background-image: url(../images/Intro/intro-bg.jpg);
 	background-attachment: fixed;
 	background-repeat: no-repeat;
 	background-position: center top;
@@ -1426,6 +1427,7 @@ header .logo a {
 
 .intro-vr {
 	position:absolute;
+	width: 100%;
 	left:0;
 	right: 0;
 	bottom:0;
@@ -1434,6 +1436,7 @@ header .logo a {
 
 .intro-ipad {
 	position:absolute;
+	width: 100%;
 	left: 0;
 	right: 0;
 	bottom:0;
@@ -1442,6 +1445,7 @@ header .logo a {
 
 .intro-iphone {
 	position:absolute;
+	width: 100%;
 	left: 0;
 	right: 0;
 	bottom:0;
@@ -1450,11 +1454,53 @@ header .logo a {
 
 .intro-logo {
 	position:absolute;
+	width: 100%;
 	left: 0;
 	right: 0;
 	bottom:0;
 	z-index: 4;
 }
+
+/* 添加移动端媒体查询 */
+@media only screen and (max-width: 768px) {
+.intro-vr {
+	position:absolute;
+	width: 100%;
+	left:0;
+	right: 0;
+	bottom:0;
+	z-index:1;
+}
+
+.intro-ipad {
+	position:absolute;
+	width: 86%;
+	left: 7%;
+	right: 0;
+	bottom:0;
+	z-index: 2;
+}
+
+.intro-iphone {
+	position:absolute;
+	width: 86%;
+	left: 7%;
+	right: 0;
+	bottom:0;
+	z-index: 3;
+}
+
+.intro-logo {
+	position:absolute;
+	width: 100%;
+	left: 0;
+	right: 0;
+	bottom:0;
+	z-index: 4;
+}
+
+}
+
 
 
 /* ------------------------------------------------------------------- 
@@ -1727,38 +1773,38 @@ header .logo a {
 
 .weichat-01 {
 	position: absolute;
-	top: -500%;
-	right: 0%;
+	top: 0%;
+	left: 0%;
 	z-index: 4;
 }
 .weichat-02 {
 	position: absolute;
-	top: -500%;
-	right: 0%;
+	top: 0%;
+	left: 0%;
 	z-index: 5;
 }
 .weichat-03 {
 	position: absolute;
-	top: -500%;
-	right: 0%;
+	top: 0%;
+	left: 0%;
 	z-index: 6;
 }
 .weichat-04 {
 	position: absolute;
-	top: -500%;
-	right: 0%;
+	top: 0%;
+	left: 0%;
 	z-index: 3;
 }
 .weichat-05 {
 	position: absolute;
-	top: -500%;
-	right: 0%;
+	top: 0%;
+	left: 0%;
 	z-index: 2;
 }
 .weichat-06 {
 	position: absolute;
-	top: -500%;
-	right: 0%;
+	top: 0%;
+	left: 0%;
 	z-index: 1;
 }
 /* ------------------------------------------------------------------- 
@@ -2153,7 +2199,7 @@ header .logo a {
 
 	.pricing-content .bgrid {
 		padding: 0;
-		width: 50%;
+		width: 45%;
 		clear: none;
 	}
 
@@ -2608,7 +2654,7 @@ footer a:active {
 	content: "|";
 	display: inline-block;
 	padding: 0 1rem 0 1.2rem;
-	color: rgba(255, 255, 255, 0.1);
+	color: rgba(255, 255, 255, 0.3);
 }
 
 .copyright span:last-child::after {
