@@ -515,7 +515,7 @@ img.pull-left {
 #loader {
 	content: url(../images/loading-logo.png);
 	position: absolute;
-	left: 47%;
+	left: 46.5%;
 	top: 30%;
 	width: 100px;
 	height: 100px;
