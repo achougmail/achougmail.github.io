@@ -515,7 +515,7 @@ img.pull-left {
 #loader {
 	content: url(../images/loading-logo.png);
 	position: absolute;
-	left: 40%;
+	left: 47%;
 	top: 30%;
 	width: 100px;
 	height: 100px;
@@ -523,18 +523,25 @@ img.pull-left {
 	padding: 0;
 }
 
+@media only screen and (max-width: 768px) {
+	#loader {
+		left: 40%;
+	}
+}
+
+/* ====
 #loader:before {
 	content: "";
 	display: block;
-	height: 80px;
-	width: 80px;
+	height: 0px;
+	width: 0px;
 	-webkit-animation: rotate .9s infinite linear;
 	animation: rotate .9s infinite linear;
 	border: 10px solid #48a3a3;
 	border-right-color: transparent;
 	border-radius: 50%;
-}
-
+} 
+	
 @-webkit-keyframes rotate {
 	0% {
 		-webkit-transform: rotate(0deg);
@@ -559,7 +566,8 @@ img.pull-left {
 		transform: rotate(360deg);
 	}
 
-}
+} 
+====*/
 
 
 /* ===================================================================
@@ -1848,7 +1856,7 @@ header .logo a {
 
 	.info-entry:nth-child(even) .info-entry-content {
 		max-width: 600px;
-		padding-top: 7rem;
+		padding-top: 4.5rem;
 		padding-bottom: 25rem;
 	}
 
