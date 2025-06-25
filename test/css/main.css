@@ -1752,6 +1752,8 @@ header .logo a {
 	padding-bottom: 13.2rem;
 }
 
+
+
 .devices-macbook {
 	position: absolute;
 	left: 0;
@@ -1770,6 +1772,9 @@ header .logo a {
 	bottom: 0;
 	z-index: 3;
 }
+
+
+
 
 .weichat-01 {
 	position: absolute;
