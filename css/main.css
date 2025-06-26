@@ -529,7 +529,7 @@ img.pull-left {
 	}
 }
 
-/* ====
+
 #loader:before {
 	content: "";
 	display: block;
@@ -567,7 +567,7 @@ img.pull-left {
 	}
 
 } 
-====*/
+
 
 
 /* ===================================================================
@@ -1714,7 +1714,7 @@ header .logo a {
 
 .info-entry:nth-child(even) .media-wrap {
 	top:25%;
-	right: 52%;
+	right: 51%;
 	padding-right: 0;
 	padding-left: 20px;
 }
@@ -1915,7 +1915,7 @@ header .logo a {
 @media only screen and (max-width:400px) {
 	.info-entry .info-entry-content {
 		padding-top: 7.8rem;
-		padding-bottom: 6rem;
+		padding-bottom: 5rem;
 	}
 
 	.info-entry .info-entry-content .media-wrap,
@@ -2210,7 +2210,7 @@ header .logo a {
 	}
 
 	.pricing-content .bgrid {
-		padding: 20;
+		padding: 10;
 		width: 50%;
 		clear: none;
 	}
