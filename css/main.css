@@ -508,7 +508,7 @@ img.pull-left {
 
 #preloader {
 	position: fixed;
-	top: 10px;
+	top: 5px;
 	left: 0;
 	right: 0;
 	bottom: 0;
