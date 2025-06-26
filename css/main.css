@@ -496,11 +496,11 @@ img.pull-left {
  *
  * ------------------------------------------------------------------- */
 #loader {
-	content: url(../images/loading-logo-mini.png);
+	content: url(../images/loading-logo.png);
 	position: absolute;
-	left: 44.5%;
+	left: 45%;
 	top: 30%;
-	width: 180px;
+	width: 160px;
 	margin: 0;
 	padding: 0;
 }
@@ -526,7 +526,7 @@ img.pull-left {
 
 @media only screen and (max-width: 768px) {
 	#loader {
-		left: 30%;
+		left: 32%;
 	}
 }
 
@@ -2133,9 +2133,11 @@ header .logo a {
 
 .pricing-content .price-block .button:hover,
 .pricing-content .price-block .button:focus {
-	background: #002a5e;
-	color: #FFFFFF;
+	background: #DDDDDD;
+	color: #002a5e;
 }
+
+/* ---primary-- */
 
 .pricing-content .primary {
 	background: #002f68;
@@ -2187,6 +2189,7 @@ header .logo a {
 .pricing-content .primary .button:hover,
 .pricing-content .primary .button:focus {
 	background: #002149;
+	color: #FFFFFF;
 }
 
 .pricing-content .primary .features {
@@ -2200,6 +2203,74 @@ header .logo a {
 .pricing-content .primary .features li strong {
 	color: #FFFFFF;
 }
+
+/* ----plus---- */
+
+.pricing-content .plus {
+	background: #f6d12e;
+	color: #001835;
+}
+
+.pricing-content .plus::before {
+	content: attr(data-info);
+	display: block;
+	min-height: 48px;
+	line-height: 48px;
+	width: 60%;
+	text-align: center;
+	color: #ffffff;
+	background: #002f68;
+	font-family: "roboto-black", sans-serif;
+	font-size: 1.2rem;
+	text-transform: uppercase;
+	letter-spacing: .3rem;
+	position: absolute;
+	top: 0px;
+	left: 50%;
+	-webkit-transform: translate(-50%);
+	-ms-transform: translate(-50%);
+	transform: translate(-50%);
+}
+
+.pricing-content .plus .plan-title {
+	color: #001835;
+}
+
+.pricing-content .plus .plan-title::after {
+	background-color: #00183521;;
+}
+
+.pricing-content .plus .plan-price {
+	color: #001835;
+}
+
+.pricing-content .plus .price-month {
+	color: #001835;
+}
+
+.pricing-content .plus .button {
+	background: #FFFFFF;
+	color: #001835;
+}
+
+.pricing-content .plus .button:hover,
+.pricing-content .plus .button:focus {
+	background: #ffaa16;
+	color: #FFFFFF;
+}
+
+.pricing-content .plus .features {
+	color: #001835a4;
+}
+
+.pricing-content .plus .features li {
+	border-bottom: 1px solid #00183521;
+}
+
+.pricing-content .plus .features li strong {
+	color: #001835;
+}
+
 
 /* ------------------------------------------------------------------- 
  * responsive:
