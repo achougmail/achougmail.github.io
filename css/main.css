@@ -2036,7 +2036,7 @@ header .logo a {
 
 .pricing-content {
 	margin-top: 3rem;
-	max-width: 1080px;
+	max-width: 1200px;
 }
 
 .pricing-content .bgrid {
@@ -2208,7 +2208,7 @@ header .logo a {
  * ------------------------------------------------------------------- */
 @media only screen and (max-width:1024px) {
 	.pricing-content {
-		max-width: 650px;
+		max-width: 900px;
 	}
 
 	.pricing-content .bgrid {
@@ -2367,7 +2367,7 @@ header .logo a {
  * ------------------------------------------------------------------- */
 #download {
 	position: relative;
-	background-image: url(../images/download-bg.jpg);
+	/* background-image: url(../images/download-bg.jpg); */
 	background-attachment: fixed;
 	background-repeat: no-repeat;
 	background-position: center top;
@@ -2408,7 +2408,7 @@ header .logo a {
 #download .button {
 	background: #FFFFFF;
 	color: #001835;
-	margin: .6rem 0 1.5rem 0;
+	margin: .6rem .6rem 1.5rem .6rem;
 }
 
 #download .button:hover,
@@ -2420,12 +2420,19 @@ header .logo a {
  * responsive:
  * download 
  * ------------------------------------------------------------------- */
-@media only screen and (max-width:768px) {
+
+
+ @media only screen and (max-width:768px) {
 	#download h2 {
 		font-size: 4rem;
 		line-height: 1.2;
 	}
+}
 
+@media only screen and (max-width:735px) {
+	#download .button {
+		width: 100%;
+	}
 }
 
 @media only screen and (max-width:600px) {
