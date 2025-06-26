@@ -2212,7 +2212,7 @@ header .logo a {
 	}
 
 	.pricing-content .bgrid {
-		padding: 10;
+		padding: 10px;
 		width: 50%;
 		clear: none;
 	}
@@ -2236,7 +2236,7 @@ header .logo a {
 	}
 
 	.pricing-content .bgrid {
-		padding: 10;
+		padding: 5px;
 		width: 100% !important;
 		float: none !important;
 		clear: both !important;
