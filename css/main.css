@@ -495,23 +495,6 @@ img.pull-left {
  * 04. preloader - (_preloader-1.scss)
  *
  * ------------------------------------------------------------------- */
-#preloader {
-	position: fixed;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	background: #151515;
-	z-index: 900;
-	height: 100%;
-	width: 100%;
-}
-
-.no-js #preloader,
-.oldie #preloader {
-	display: none;
-}
-
 #loader {
 	content: url(../images/loading-logo.png);
 	position: absolute;
@@ -522,6 +505,25 @@ img.pull-left {
 	margin: 0;
 	padding: 0;
 }
+
+#preloader {
+	position: fixed;
+	top: 10px;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background: #151515;
+	z-index: 901;
+	height: 100%;
+	width: 100%;
+}
+
+.no-js #preloader,
+.oldie #preloader {
+	display: none;
+}
+
+
 
 @media only screen and (max-width: 768px) {
 	#loader {
