@@ -2236,6 +2236,7 @@ header .logo a {
 	}
 
 	.pricing-content .bgrid {
+		padding: 10;
 		width: 100% !important;
 		float: none !important;
 		clear: both !important;
