@@ -2249,14 +2249,14 @@ header .logo a {
 }
 
 .pricing-content .plus .button {
-	background: #FFFFFF;
-	color: #001835;
+	background: #001835;
+	color: #FFFFFF;
 }
 
 .pricing-content .plus .button:hover,
 .pricing-content .plus .button:focus {
 	background: #ffaa16;
-	color: #FFFFFF;
+	color: #001835;
 }
 
 .pricing-content .plus .features {
