@@ -498,10 +498,9 @@ img.pull-left {
 #loader {
 	content: url(../images/loading-logo.png);
 	position: absolute;
-	left: 46.5%;
+	left: 44.5%;
 	top: 30%;
-	width: 100px;
-	height: 100px;
+	width: 180px;
 	margin: 0;
 	padding: 0;
 }
@@ -527,7 +526,7 @@ img.pull-left {
 
 @media only screen and (max-width: 768px) {
 	#loader {
-		left: 40%;
+		left: 33%;
 	}
 }
 
