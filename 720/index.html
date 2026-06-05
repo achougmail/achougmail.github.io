@@ -3,20 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>720</title>
+    <title>房产实勘员VR</title>
+    
+    <!-- 引入项目CSS文件 -->
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/main.css">
+    
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
         body {
-            background-color: #1a1a1a;
+            background-color: #0e0e0e;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
+            font-family: "roboto-regular", sans-serif;
         }
         
         .modal {
@@ -25,9 +25,9 @@
             left: 50%;
             transform: translate(-50%, -50%);
             background-color: #fff;
-            padding: 20px;
+            padding: 30px;
             border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
             z-index: 1000;
             width: 60%;
             max-width: 600px;
@@ -38,7 +38,7 @@
             display: flex;
             justify-content: flex-end;
             align-items: center;
-            margin-bottom: 10px;
+            margin-bottom: 20px;
         }
         
         .countdown {
@@ -46,12 +46,17 @@
             height: 32px;
             margin-right: 10px;
             color: #666;
-            font-size: 16px;
+            font-size: 1.6rem;
             background: transparent;
             border-radius: 6px;
             display: flex;
             justify-content: center;
             align-items: center;
+            font-family: "roboto-bold", sans-serif;
+        }
+        
+        .countdown:hover {
+            background-color: #f0f0f0;
         }
         
         .pause-btn {
@@ -64,7 +69,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 14px;
+            font-size: 1.4rem;
             margin-right: 10px;
             color: #666;
         }
@@ -83,12 +88,53 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 18px;
+            font-size: 1.8rem;
             color: #666;
         }
         
         .close-btn:hover {
             background-color: #f0f0f0;
+        }
+        
+        .modal-content {
+            text-align: center;
+        }
+        
+        .modal-content h2 {
+            font-family: "roboto-black", sans-serif;
+            font-size: 2.4rem;
+            color: #001835;
+            margin-bottom: 1.5rem;
+            line-height: 1.25;
+        }
+        
+        .modal-content .subtitle {
+            font-size: 1.8rem;
+            color: #292c35;
+            margin-bottom: 2rem;
+            font-family: "roboto-medium", sans-serif;
+        }
+        
+        .modal-content .description {
+            font-size: 1.6rem;
+            color: #292c35;
+            line-height: 2;
+            margin-bottom: 2rem;
+        }
+        
+        .modal-content .copyright {
+            font-size: 1.4rem;
+            color: #888;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #eee;
+            line-height: 2;
+        }
+        
+        .modal-content .contact {
+            font-size: 1.4rem;
+            color: #ed254d;
+            margin-top: 1rem;
         }
     </style>
 </head>
@@ -100,21 +146,17 @@
             <button class="close-btn" id="closeBtn">&times;</button>
         </div>
         <div class="modal-content">
-            <h2>房产实勘员VR</h2><br>
-            航拍地图操作指引
-            <p
-            <br>
-            <br>
-            详细操作正在制作中，请稍候......
-            <br>
-            所有内容自动更新，无需手动操作
-            <br>
-            <br>
-            <br>
-            </p>
-            @Copyright 房产实勘员 2026<br>
-            https://achou.pages.dev/<br>
-            如有问题或建议，请联系182-0202-9366
+            <h2>房产实勘员VR</h2>
+            <div class="subtitle">航拍地图操作指引</div>
+            <div class="description">
+                详细操作正在制作中，请稍候......<br>
+                所有内容自动更新，无需手动操作
+            </div>
+            <div class="copyright">
+                © Copyright 房产实勘员 2026<br>
+                https://achou.pages.dev/
+            </div>
+            <div class="contact">如有问题或建议，请联系 182-0202-9366</div>
         </div>
     </div>
 
