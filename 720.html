@@ -3,149 +3,99 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VR 展示</title>
+    <title>720</title>
     <style>
-        body, html {
+        * {
             margin: 0;
             padding: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            font-family: "Microsoft YaHei", Arial, sans-serif;
+            box-sizing: border-box;
         }
-
-        /* 全屏 iframe 样式 */
-        #vr-iframe {
-            width: 100vw;
-            height: 100vh;
-            border: none;
-            display: block;
-        }
-
-        /* 弹窗遮罩层 */
-        #modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
+        
+        body {
+            background-color: #333;
             display: flex;
             justify-content: center;
             align-items: center;
+            height: 100vh;
+        }
+        
+        .modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
             z-index: 1000;
         }
-
-        /* 弹窗容器 */
-        #modal-container {
-            background-color: #fff;
-            width: 80%;
-            max-width: 500px;
-            min-height: 300px;
-            border-radius: 8px;
-            position: relative;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-            padding: 20px;
-            box-sizing: border-box;
+        
+        .modal-header {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            margin-bottom: 10px;
         }
-
-        /* 关闭按钮 */
-        #close-btn {
-            position: absolute;
-            top: 10px;
-            right: 15px;
-            font-size: 24px;
+        
+        .countdown {
+            margin-right: 10px;
             color: #666;
-            cursor: pointer;
-            border: none;
-            background: none;
-            padding: 0;
-            line-height: 1;
-            transition: color 0.3s;
-        }
-
-        #close-btn:hover {
-            color: #000;
-        }
-
-        /* 倒计时提示 */
-        #countdown-text {
-            position: absolute;
-            top: 16px;
-            right: 45px;
             font-size: 14px;
-            color: #999;
         }
-
-        /* 弹窗内容 */
-        #modal-content {
-            margin-top: 20px;
-            text-align: center;
+        
+        .close-btn {
+            width: 24px;
+            height: 24px;
+            border: none;
+            background-color: #eee;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 16px;
+        }
+        
+        .close-btn:hover {
+            background-color: #ddd;
         }
     </style>
 </head>
 <body>
-
-    <!-- 全屏嵌入 VR 页面 -->
-    <iframe 
-        id="vr-iframe" 
-        src="https://720zf.com/t/9dd601ee01561040" 
-        allowfullscreen 
-        allow="autoplay; fullscreen; xr-spatial-tracking; clipboard-write; encrypted-media; gyroscope; accelerometer; magnetometer;"
-        referrerpolicy="no-referrer-when-downgrade">
-    </iframe>
-
-    <!-- 弹窗提示 -->
-    <div id="modal-overlay">
-        <div id="modal-container">
-            <span id="countdown-text">5s</span>
-            <button id="close-btn" title="关闭">&times;</button>
-            <div id="modal-content">
-                <h3 style="margin-top: 0;">欢迎使用 VR 展示</h3>
-                <p style="color: #666; font-size: 14px; line-height: 1.6;">
-                    如果遇到无法登录或页面加载异常：<br>
-                    1. 请确保浏览器未禁用<b>第三方 Cookie</b>。<br>
-                    2. 建议在 HTTPS 环境下访问本页面。<br>
-                    3. 若仍有问题，请尝试点击右上角关闭此提示后再操作。
-                </p>
-            </div>
+    <div class="modal" id="modal">
+        <div class="modal-header">
+            <span class="countdown" id="countdown">5</span>
+            <button class="close-btn" id="closeBtn">&times;</button>
         </div>
+        <div class="modal-content">房产实勘员VR航拍地图操作指引</div>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const overlay = document.getElementById('modal-overlay');
-            const closeBtn = document.getElementById('close-btn');
-            const countdownText = document.getElementById('countdown-text');
+        const modal = document.getElementById('modal');
+        const closeBtn = document.getElementById('closeBtn');
+        const countdown = document.getElementById('countdown');
+        
+        let timeLeft = 5;
+        
+        const timer = setInterval(() => {
+            timeLeft--;
+            countdown.textContent = timeLeft;
             
-            let timeLeft = 5;
-            let timer = null;
-
-            // 关闭弹窗的函数
-            function closeModal() {
-                overlay.style.display = 'none';
-                if (timer) clearInterval(timer);
+            if (timeLeft <= 0) {
+                clearInterval(timer);
+                closeModal();
             }
-
-            // 倒计时逻辑
-            timer = setInterval(function() {
-                timeLeft--;
-                if (timeLeft <= 0) {
-                    closeModal();
-                } else {
-                    countdownText.textContent = timeLeft + 's';
-                }
-            }, 1000);
-
-            // 点击关闭按钮隐藏弹窗
-            closeBtn.addEventListener('click', closeModal);
-
-            // 点击遮罩层也可以关闭
-            overlay.addEventListener('click', function(e) {
-                if (e.target === overlay) {
-                    closeModal();
-                }
-            });
+        }, 1000);
+        
+        function closeModal() {
+            modal.style.display = 'none';
+            window.location.href = 'https://720zf.com/t/9dd601ee01561040';
+        }
+        
+        closeBtn.addEventListener('click', () => {
+            clearInterval(timer);
+            closeModal();
         });
     </script>
 </body>
