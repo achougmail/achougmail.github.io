@@ -3,20 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>房产实勘员VR</title>
-    
-    <!-- 引入项目CSS文件 -->
-    <link rel="stylesheet" href="css/base.css">
-    <link rel="stylesheet" href="css/main.css">
-    
+    <title>房产实勘员VR-操作指引</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
         body {
-            background-color: #0e0e0e;
+            background-color: #1a1a1a;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            font-family: "roboto-regular", sans-serif;
         }
         
         .modal {
@@ -25,9 +25,9 @@
             left: 50%;
             transform: translate(-50%, -50%);
             background-color: #fff;
-            padding: 30px;
+            padding: 20px;
             border-radius: 8px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
             z-index: 1000;
             width: 60%;
             max-width: 600px;
@@ -38,7 +38,7 @@
             display: flex;
             justify-content: flex-end;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
         }
         
         .countdown {
@@ -46,17 +46,12 @@
             height: 32px;
             margin-right: 10px;
             color: #666;
-            font-size: 1.6rem;
+            font-size: 16px;
             background: transparent;
             border-radius: 6px;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-family: "roboto-bold", sans-serif;
-        }
-        
-        .countdown:hover {
-            background-color: #f0f0f0;
         }
         
         .pause-btn {
@@ -69,7 +64,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 1.4rem;
+            font-size: 14px;
             margin-right: 10px;
             color: #666;
         }
@@ -88,75 +83,55 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 1.8rem;
+            font-size: 18px;
             color: #666;
         }
         
         .close-btn:hover {
             background-color: #f0f0f0;
         }
-        
         .modal-content {
-            text-align: center;
+            padding: 10px;
         }
-        
-        .modal-content h2 {
-            font-family: "roboto-black", sans-serif;
-            font-size: 2.4rem;
-            color: #001835;
-            margin-bottom: 1.5rem;
-            line-height: 1.25;
+
+        .title {
+            color: #011d38; /* 深蓝色标题 */
+            font-size: 20x;
+            font-weight: bold;
+            text-align: left;
         }
-        
-        .modal-content .subtitle {
-            font-size: 1.8rem;
-            color: #292c35;
-            margin-bottom: 2rem;
-            font-family: "roboto-medium", sans-serif;
+
+        .content-text {
+            color: #000; /* 黑色正文 */
+            font-size: 12px;
         }
-        
-        .modal-content .description {
-            font-size: 1.6rem;
-            color: #292c35;
-            line-height: 2;
-            margin-bottom: 2rem;
+
+        .copyright {
+            color: #999; /* 浅灰色版权说明 */
+            font-size: 14px;
         }
-        
-        .modal-content .copyright {
-            font-size: 1.4rem;
-            color: #888;
-            margin-top: 2rem;
-            padding-top: 1.5rem;
-            border-top: 1px solid #eee;
-            line-height: 2;
-        }
-        
-        .modal-content .contact {
-            font-size: 1.4rem;
-            color: #ed254d;
-            margin-top: 1rem;
+
+        .contact {
+            color: #fc1b1b; /* 红色联系方式 */
+            font-size: 8x;
         }
     </style>
 </head>
 <body>
     <div class="modal" id="modal">
         <div class="modal-header">
+            <span class="title">房产实勘员VR</span>
+            
             <span class="countdown" id="countdown">5</span>
             <button class="pause-btn" id="pauseBtn">||</button>
             <button class="close-btn" id="closeBtn">&times;</button>
         </div>
-        <div class="modal-content">
-            <h2>房产实勘员VR</h2>
-            <div class="subtitle">航拍地图操作指引</div>
-            <div class="description">
-                详细操作正在制作中，请稍候......<br>
-                所有内容自动更新，无需手动操作
-            </div>
-            <div class="copyright">
-                © Copyright 房产实勘员 2025-2026<br>
-                https://achou.pages.dev/
-            </div>
-            <div class="contact">如有问题或建议，请联系 182-0202-9366</div>
+        <div class="modal-content
+            <p class="content-text">航拍地图操作指引,稍后更新</p>
+            <br>
+            <p class="copyright">@Copyright 房产实勘员 2025-2026<br></p>
+            <p class="copyright"><a href="https://achou.pages.dev/" target="_blank">https://achou.pages.dev</a></p>
+            <p class="copyright">如有问题或建议，请联系18202029366</p>
         </div>
     </div>
 
@@ -196,7 +171,7 @@
         
         function closeModal() {
             modal.style.display = 'none';
-            window.location.href = 'https://720zf.com/t/9dd601ee01561040';
+            window.self.location.href = 'https://720zf.com/t/9dd601ee01561040';
         }
         
         startTimer();
