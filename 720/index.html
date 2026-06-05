@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>房产实勘员VR-操作指引</title>
+    <title>房产实勘员VR-南沙航拍地图</title>
     <style>
         * {
             margin: 0;
@@ -36,9 +36,19 @@
         
         .modal-header {
             display: flex;
-            justify-content: flex-end;
+            justify-content: space-between;
             align-items: center;
             margin-bottom: 10px;
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+        }
+        
+        .header-controls {
+            display: flex;
+            align-items: center;
         }
         
         .countdown {
@@ -96,7 +106,7 @@
 
         .title {
             color: #011d38; /* 深蓝色标题 */
-            font-size: 20x;
+            font-size: 40;
             font-weight: bold;
             text-align: left;
         }
@@ -120,17 +130,24 @@
 <body>
     <div class="modal" id="modal">
         <div class="modal-header">
-            <span class="title">房产实勘员VR</span>
-            <span class="countdown" id="countdown">3</span>
-            <button class="pause-btn" id="pauseBtn">||</button>
-            <button class="close-btn" id="closeBtn">&times;</button>
+            <div class="logo-container">
+                <img src="images/logo.png" width="50px" height="50px">
+                <span class="title">　房产实勘员VR</span>
+            </div>
+            <div class="header-controls">
+                <span class="countdown" id="countdown">3</span>
+                <button class="pause-btn" id="pauseBtn">||</button>
+                <button class="close-btn" id="closeBtn">&times;</button>
+            </div>
         </div>
-        <div class="modal-content
-            <p class="content-text">
+
+        <div class="modal-content" >
+            <p>
                 航拍地图操作指引<br>
                 稍后更新
-            </p>
             <br>
+            <br>
+            </p>
             <p class="copyright">@Copyright 房产实勘员 2025-2026<br></p>
             <p class="copyright"><a href="https://achou.pages.dev/" target="_blank">https://achou.pages.dev</a></p>
             <p class="copyright">如有问题或建议，请联系18202029366</p>
@@ -189,6 +206,17 @@
         closeBtn.addEventListener('click', () => {
             clearInterval(timer);
             closeModal();
+        });
+        
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'Space') {
+                e.preventDefault();
+                if (isPaused) {
+                    resumeTimer();
+                } else {
+                    pauseTimer();
+                }
+            }
         });
     </script>
 </body>
