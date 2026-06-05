@@ -4,219 +4,106 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>房产实勘员VR-南沙航拍地图</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            background-color: #1a1a1a;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-        
-        .modal {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-            z-index: 1000;
-            width: 80%;
-            max-width: 800px;
-            min-width: 300px;
-        }
-        
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-        
-        .logo-container {
-            display: flex;
-            align-items: center;
-        }
-        
-        .header-controls {
-            display: flex;
-            align-items: center;
-        }
-        
-        .countdown {
-            width: 32px;
-            height: 32px;
-            margin-right: 10px;
-            color: #666;
-            font-size: 16px;
-            background: transparent;
-            border-radius: 6px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .pause-btn {
-            width: 32px;
-            height: 32px;
-            border: none;
-            background: transparent;
-            border-radius: 6px;
-            cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 14px;
-            margin-right: 10px;
-            color: #666;
-        }
-        
-        .pause-btn:hover {
-            background-color: #f0f0f0;
-        }
-        
-        .close-btn {
-            width: 32px;
-            height: 32px;
-            border: none;
-            background: transparent;
-            border-radius: 6px;
-            cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 18px;
-            color: #666;
-        }
-        
-        .close-btn:hover {
-            background-color: #f0f0f0;
-        }
-        .modal-content {
-            padding: 10px;
-        }
-
-        .title {
-            color: #011d38; /* 深蓝色标题 */
-            font-size: 40;
-            font-weight: bold;
-            text-align: left;
-        }
-
-        .content-text {
-            color: #000; /* 黑色正文 */
-            font-size: 12px;
-        }
-
-        .copyright {
-            color: #999; /* 浅灰色版权说明 */
-            font-size: 14px;
-        }
-
-        .contact {
-            color: #fc1b1b; /* 红色联系方式 */
-            font-size: 8x;
-        }
-    </style>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <div class="modal" id="modal">
-        <div class="modal-header">
+    <main class="modal" id="modal">
+        <header class="modal-header">
             <div class="logo-container">
-                <img src="images/logo.png" width="35px" height="35px">
-                <span class="title">　房产实勘员VR</span>
+                <img src="images/logo.png" width="35" height="35" alt="房产实勘员Logo">
+                <span class="logo-title">房产实勘员VR</span>
             </div>
             <div class="header-controls">
-                <span class="countdown" id="countdown">3</span>
-                <button class="pause-btn" id="pauseBtn">||</button>
-                <button class="close-btn" id="closeBtn">&times;</button>
+                <span class="countdown" id="countdown" aria-label="自动关闭倒计时">5</span>
+                <button class="btn-icon" id="pauseBtn" title="暂停/继续 (空格键)" aria-label="暂停倒计时">
+                    <span id="pauseIcon">||</span>
+                </button>
+                <button class="btn-icon close-btn" id="closeBtn" title="立即进入" aria-label="关闭提示并进入">
+                    &times;
+                </button>
             </div>
-        </div>
+        </header>
 
-        <div class="modal-content" >
-            <p>
-                航拍地图操作指引<br>
-                稍后更新
-            <br>
-            <br>
-            </p>
-            <p class="copyright">@Copyright 房产实勘员 2025-2026<br></p>
-            <p class="copyright"><a href="https://achou.pages.dev/" target="_blank">https://achou.pages.dev</a></p>
-            <p class="copyright">如有问题或建议，请联系18202029366</p>
+        <div class="modal-content">
+            <h1 class="title">航拍地图操作指引</h1>
+            <span class="content-subtitle">(按暂停键或空格键暂停查看)</span>
+            
+            <ul class="guide-list">
+                <li>缩放视图: 查看更多信息</li>
+                <li>动态标签: 有关联的信息</li>
+                <li>户型VR: 查看内嵌VR户型</li>
+                <li>三维户型图：查看户型三维模型</li>
+                <li>小程序：方便查看，私域获客</li>
+                <li>门店展示：免费定制门店大展应用</li>
+            </ul>
+
+            <footer class="footer-info">
+                <p>资料持续更新，欢迎反馈建议</p>
+                <p>房产实勘员 2025-2026</p>
+                <p><a href="https://achou.pages.dev/" target="_blank" rel="noopener">https://achou.pages.dev</a></p>
+                <p>如有问题或建议，请联系：18202029366</p>
+            </footer>
         </div>
-    </div>
+    </main>
 
     <script>
-        const modal = document.getElementById('modal');
-        const closeBtn = document.getElementById('closeBtn');
-        const pauseBtn = document.getElementById('pauseBtn');
-        const countdown = document.getElementById('countdown');
-        
-        let timeLeft = 3;
-        let timer = null;
-        let isPaused = false;
-        
-        function startTimer() {
-            timer = setInterval(() => {
-                timeLeft--;
-                countdown.textContent = timeLeft;
-                
-                if (timeLeft <= 0) {
-                    clearInterval(timer);
-                    closeModal();
-                }
-            }, 1000);
-        }
-        
-        function pauseTimer() {
-            clearInterval(timer);
-            isPaused = true;
-            pauseBtn.textContent = '▶';
-        }
-        
-        function resumeTimer() {
-            isPaused = false;
-            pauseBtn.textContent = '||';
-            startTimer();
-        }
-        
-        function closeModal() {
-            modal.style.display = 'none';
-            window.self.location.href = 'https://720zf.com/t/9dd601ee01561040';
-        }
-        
-        startTimer();
-        
-        pauseBtn.addEventListener('click', () => {
-            if (isPaused) {
-                resumeTimer();
-            } else {
-                pauseTimer();
-            }
-        });
-        
-        closeBtn.addEventListener('click', () => {
-            clearInterval(timer);
-            closeModal();
-        });
-        
-        document.addEventListener('keydown', (e) => {
-            if (e.code === 'Space') {
-                e.preventDefault();
+        document.addEventListener('DOMContentLoaded', () => {
+            const modal = document.getElementById('modal');
+            const closeBtn = document.getElementById('closeBtn');
+            const pauseBtn = document.getElementById('pauseBtn');
+            const pauseIcon = document.getElementById('pauseIcon');
+            const countdown = document.getElementById('countdown');
+            
+            const REDIRECT_URL = 'https://720zf.com/t/9dd601ee01561040';
+            let timeLeft = 5;
+            let timer = null;
+            let isPaused = false;
+            
+            const startTimer = () => {
+                if (timer) clearInterval(timer);
+                timer = setInterval(() => {
+                    timeLeft--;
+                    countdown.textContent = timeLeft;
+                    
+                    if (timeLeft <= 0) {
+                        clearInterval(timer);
+                        navigateToVR();
+                    }
+                }, 1000);
+            };
+            
+            const toggleTimer = () => {
                 if (isPaused) {
-                    resumeTimer();
+                    isPaused = false;
+                    pauseIcon.textContent = '||';
+                    pauseBtn.title = '暂停 (空格键)';
+                    startTimer();
                 } else {
-                    pauseTimer();
+                    isPaused = true;
+                    clearInterval(timer);
+                    pauseIcon.textContent = '▶';
+                    pauseBtn.title = '继续 (空格键)';
                 }
-            }
+            };
+            
+            const navigateToVR = () => {
+                if (timer) clearInterval(timer);
+                window.location.href = REDIRECT_URL;
+            };
+            
+            // 初始化计时器
+            startTimer();
+            
+            // 事件监听
+            pauseBtn.addEventListener('click', toggleTimer);
+            closeBtn.addEventListener('click', navigateToVR);
+            
+            document.addEventListener('keydown', (e) => {
+                if (e.code === 'Space') {
+                    e.preventDefault();
+                    toggleTimer();
+                }
+            });
         });
     </script>
 </body>
