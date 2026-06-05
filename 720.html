@@ -12,7 +12,7 @@
         }
         
         body {
-            background-color: #333;
+            background-color: #1a1a1a;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -29,6 +29,9 @@
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
             z-index: 1000;
+            width: 60%;
+            max-width: 600px;
+            min-width: 280px;
         }
         
         .modal-header {
@@ -39,26 +42,53 @@
         }
         
         .countdown {
+            width: 32px;
+            height: 32px;
             margin-right: 10px;
             color: #666;
-            font-size: 14px;
+            font-size: 16px;
+            background: transparent;
+            border-radius: 6px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
         
-        .close-btn {
-            width: 24px;
-            height: 24px;
+        .pause-btn {
+            width: 32px;
+            height: 32px;
             border: none;
-            background-color: #eee;
-            border-radius: 50%;
+            background: transparent;
+            border-radius: 6px;
             cursor: pointer;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 16px;
+            font-size: 14px;
+            margin-right: 10px;
+            color: #666;
+        }
+        
+        .pause-btn:hover {
+            background-color: #f0f0f0;
+        }
+        
+        .close-btn {
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: transparent;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 18px;
+            color: #666;
         }
         
         .close-btn:hover {
-            background-color: #ddd;
+            background-color: #f0f0f0;
         }
     </style>
 </head>
@@ -66,32 +96,76 @@
     <div class="modal" id="modal">
         <div class="modal-header">
             <span class="countdown" id="countdown">5</span>
+            <button class="pause-btn" id="pauseBtn">||</button>
             <button class="close-btn" id="closeBtn">&times;</button>
         </div>
-        <div class="modal-content">房产实勘员VR航拍地图操作指引</div>
+        <div class="modal-content">
+            <h2>房产实勘员VR</h2><br>
+            航拍地图操作指引
+            <p
+            <br>
+            <br>
+            详细操作正在制作中，请稍候......
+            <br>
+            所有内容自动更新，无需手动操作
+            <br>
+            <br>
+            <br>
+            </p>
+            @Copyright 房产实勘员 2026<br>
+            https://achou.pages.dev/<br>
+            如有问题或建议，请联系182-0202-9366
+        </div>
     </div>
 
     <script>
         const modal = document.getElementById('modal');
         const closeBtn = document.getElementById('closeBtn');
+        const pauseBtn = document.getElementById('pauseBtn');
         const countdown = document.getElementById('countdown');
         
         let timeLeft = 5;
+        let timer = null;
+        let isPaused = false;
         
-        const timer = setInterval(() => {
-            timeLeft--;
-            countdown.textContent = timeLeft;
-            
-            if (timeLeft <= 0) {
-                clearInterval(timer);
-                closeModal();
-            }
-        }, 1000);
+        function startTimer() {
+            timer = setInterval(() => {
+                timeLeft--;
+                countdown.textContent = timeLeft;
+                
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    closeModal();
+                }
+            }, 1000);
+        }
+        
+        function pauseTimer() {
+            clearInterval(timer);
+            isPaused = true;
+            pauseBtn.textContent = '▶';
+        }
+        
+        function resumeTimer() {
+            isPaused = false;
+            pauseBtn.textContent = '||';
+            startTimer();
+        }
         
         function closeModal() {
             modal.style.display = 'none';
             window.location.href = 'https://720zf.com/t/9dd601ee01561040';
         }
+        
+        startTimer();
+        
+        pauseBtn.addEventListener('click', () => {
+            if (isPaused) {
+                resumeTimer();
+            } else {
+                pauseTimer();
+            }
+        });
         
         closeBtn.addEventListener('click', () => {
             clearInterval(timer);
