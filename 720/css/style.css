@@ -30,7 +30,7 @@ body {
     transform: translate(-50%, -50%);
     background-color: var(--modal-bg);
     padding: 30px;
-    border-radius: 12px;
+    border-radius: 16px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     z-index: 1000;
     width: 90%;
@@ -65,10 +65,10 @@ body {
 }
 
 .countdown {
-    width: 32px;
-    height: 32px;
+    width: 30px;
+    height: 30px;
     color: var(--secondary-text);
-    font-size: 16px;
+    font-size: 10px;
     display: flex;
     justify-content: center;
     align-items: center;
