@@ -67,7 +67,7 @@ body {
 .countdown {
     width: 32px;
     height: 32px;
-    color: var(--subtitle-color);
+    color: var(--secondary-text);
     font-size: 16px;
     display: flex;
     justify-content: center;
