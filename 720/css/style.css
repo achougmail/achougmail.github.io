@@ -139,7 +139,7 @@ body {
 
 .modal-content .guide-list li {
     font-size: 15px;
-    line-height: 2.2;
+    line-height: 2.5;
     padding-left: 0;
     position: relative;
     white-space: nowrap;
@@ -151,6 +151,12 @@ body {
 .list-icon {
     width: 20px;
     height: 20px;
+    flex-shrink: 0;
+}
+
+.countdown-icon {
+    width: 15px;
+    height: 15px;
     flex-shrink: 0;
 }
 

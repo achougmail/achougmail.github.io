@@ -11,32 +11,32 @@
     <main class="modal" id="modal">
         <header class="modal-header">
             <div class="logo-container">
-                <img src="images/logo.png" width="35" height="35" alt="房产实勘员Logo">
+                <img src="images/logo.png" width="45px" height="45px" alt="房产实勘员Logo">
                 <span class="logo-title">房产实勘员VR</span>
             </div>
             <div class="header-controls">
                 <span class="countdown" id="countdown" aria-label="关闭倒计时">3</span>
                 <button class="btn-icon" id="pauseBtn" title="暂停/继续 (空格键)" aria-label="暂停倒计时">
-                    <span id="pauseIcon">||</span>
+                    <span id="pauseIcon"><img src="images/pause.png" alt="暂停" class="countdown-icon"></span>
                 </button>
                 <button class="btn-icon close-btn" id="closeBtn" title="立即进入" aria-label="关闭提示并进入">
-                    &times;
+                    <span><img src="images/close.png" alt="关闭" class="list-icon"></span>
                 </button>
             </div>
         </header>
 
         <div class="modal-content">
             <h1 class="title">航拍地图操作指引</h1>
-            <span class="content-subtitle">(按暂停键或空格键暂停倒计时；关闭进入地图)</span>
+            <span class="content-subtitle">(按 暂停键 或 空格键 暂停进入地图)</span>
             
             <ul class="guide-list">
                 <li><img src="images/1.png" alt="移动" class="list-icon"> 移动视图: 环绕浏览全景地图</li>
                 <li><img src="images/2.png" alt="缩放" class="list-icon"> 缩放视图: 查看不同层次的信息</li>
                 <li><img src="images/3.png" alt="点击" class="list-icon"> 点击标识: 跳转场景或查看详细信息</li>
                 <li><img src="images/4.png" alt="标签" class="list-icon"> 动态标签: 动态标签表示有信息</li>
-                <li><img src="images/5.png" alt="户型" class="list-icon"> 户型VR: 浏览内嵌VR户型</li>
-                <li><img src="images/6.png" alt="三维" class="list-icon"> 三维户型图：浏览三维户型模型</li>
-                <li><img src="images/7.png" alt="应用" class="list-icon"> 门店展示：免费定制大屏演示应用</li>
+                <li><img src="images/5.png" alt="户型" class="list-icon"> 户型VR: 浏览内嵌VR实景户型</li>
+                <li><img src="images/6.png" alt="三维" class="list-icon"> 三维户型：浏览三维户型模型</li>
+                <li><img src="images/7.png" alt="应用" class="list-icon"> 定制程序：免费定制大屏演示应用</li>
                 <li><img src="images/8.png" alt="小程序" class="list-icon"> 小程序：实用工具集，私域获客利器</li>
             </ul>
 
@@ -78,13 +78,13 @@
             const toggleTimer = () => {
                 if (isPaused) {
                     isPaused = false;
-                    pauseIcon.textContent = '||';
+                    pauseIcon.innerHTML = '<img src="images/pause.png" alt="暂停" class="countdown-icon">';
                     pauseBtn.title = '暂停 (空格键)';
                     startTimer();
                 } else {
                     isPaused = true;
                     clearInterval(timer);
-                    pauseIcon.textContent = '▶';
+                    pauseIcon.innerHTML = '<img src="images/play.png" alt="继续" class="countdown-icon">';
                     pauseBtn.title = '继续 (空格键)';
                 }
             };
