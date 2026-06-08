@@ -33,7 +33,7 @@ body {
     border-radius: 16px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     z-index: 1000;
-    width: 90%;
+    width: 85%;
     max-width: 800px;
 }
 
@@ -110,7 +110,7 @@ body {
 
 .modal-content .guide-list {
     list-style: none;
-    margin: 20px 0;
+    margin: 15px 0;
     display: grid;
     grid-template-columns: 1fr;
     gap: 0 20px;
@@ -131,27 +131,35 @@ body {
     margin-bottom: 15px;
 }
 
-@media (min-width: 480px) {
+@media (max-width: 480px) {
+    .modal-content .guide-list {
+        grid-template-columns: 1fr;
+    }
+    .desktop-only {
+        display: none;
+    }
+}
+
+@media (min-width: 481px) {
     .modal-content .guide-list {
         grid-template-columns: 1fr 1fr;
     }
 }
+.list-icon {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+}
 
 .modal-content .guide-list li {
     font-size: 15px;
-    line-height: 2.5;
+    line-height: 2.2;
     padding-left: 0;
     position: relative;
     white-space: nowrap;
     display: flex;
     align-items: center;
     gap: 10px;
-}
-
-.list-icon {
-    width: 20px;
-    height: 20px;
-    flex-shrink: 0;
 }
 
 .countdown-icon {
