@@ -93,7 +93,7 @@
     document.getElementById('container').appendChild(renderer.domElement);
     renderer.setClearColor(0x606069, 1.0);
 	renderer.autoClear = false;
-	renderer.shadowMap.enabled = true;
+	renderer.shadowMap.enabled = false;
 	renderer.shadowMap.type = THREE.PCFShadowMap;
     scene = new THREE.Scene();
 	var scene_length = 26006;
@@ -404,7 +404,7 @@
 	scene.add( lines );
 }
 }
-	texture_show( true);
+	texture_show( false);
 	add_gui();
     // 画面リサイズ時のイベント
     window.addEventListener( 'resize', onWindowResize, false );
@@ -416,9 +416,9 @@ if( SUPPORTS_LOCAL_STORAGE ){
 	parameters = {
 		场景选择: function(){document.getElementById('modal').style.display="block";},
 		lookaround:false,
-		textureon:true,
+		textureon:false,
 		useclip:true,
-		useshadow:true,
+		useshadow:false,
 		ambicolor: "#bbbbbb",
 		suncolor: "#cccccc",
 		subcolor: "#cccccc",
@@ -431,6 +431,7 @@ if( SUPPORTS_LOCAL_STORAGE ){
 		gclipzmax:1.0,
 		gclipzmin:1.0
 	};
+	/*
 	var skpage = gui.add( parameters, '场景选择');
 	scenetable = '<table border="5" bordercolor="#ffffff" style="table-layout:fixed;" width="100%" height="100%"><tr>'
 + '<td class="lt-cell" onclick="scenechange([1237.897,676.400,778.341],[252.615,321.200,7.671],45)">环绕观察视图</td>'
@@ -440,6 +441,7 @@ if( SUPPORTS_LOCAL_STORAGE ){
 	sklookaround.onChange(function(value){   controls.lookaround = value;  	});
 	var skflyspeed = gui.add( parameters, 'flyspeed' , 1 , 100).name('飞行速度').listen();
 	skflyspeed.onChange(function(value){   controls.flyspeed = value;  	});
+	*/
 	var sktextureon = gui.add( parameters, 'textureon' ).name('纹理 开/关').listen();
 	sktextureon.onChange(function(value){   texture_show( value);  	});
 	var skshadowon = gui.add( parameters, 'useshadow' ).name('阴影 开/关').listen();
@@ -454,31 +456,31 @@ if( SUPPORTS_LOCAL_STORAGE ){
 			materials[i].uniforms.use_clipping.value = value;
 		}
 	});
+	/*
 	var skclipxmax = f_clips.add( parameters, 'gclipxmax' , clipMIN , clipMAX).name('X 轴末端裁切').listen();
 	skclipxmax.onChange(function(value){
 		for(var i=0; i < materials.length; i++){
 			materials[i].uniforms.clipmaxX.value = value;
 		}
 	});
+	*/
+	/*
 	var skclipxmin = f_clips.add( parameters, 'gclipxmin' , clipMIN , clipMAX).name('X 轴首端裁切').listen();
 	skclipxmin.onChange(function(value){
 		for(var i=0; i < materials.length; i++){
 			materials[i].uniforms.clipminX.value = value;
 		}
 	});
+	*/
 	
-	var skclipzmax = f_clips.add( parameters, 'gclipzmax' , clipMIN , clipMAX).name('Y 轴末端裁切').listen();
-	skclipzmax.onChange(function(value){
-		for(var i=0; i < materials.length; i++){
-			materials[i].uniforms.clipmaxZ.value = value;
-		}
-	});
+	/*
 	var skclipzmin = f_clips.add( parameters, 'gclipzmin' , clipMIN , clipMAX).name('Y 轴首端裁切').listen();
 	skclipzmin.onChange(function(value){
 		for(var i=0; i < materials.length; i++){
 			materials[i].uniforms.clipminZ.value = value;
 		}
 	});
+	*/
 
 	var skclipymax = f_clips.add( parameters, 'gclipymax' , clipMIN , clipMAX).name('Z 轴末端裁切').listen();
 	skclipymax.onChange(function(value){
@@ -492,6 +494,7 @@ if( SUPPORTS_LOCAL_STORAGE ){
 			materials[i].uniforms.clipminY.value = value;
 		}
 	});
+	/*
 	var f_lights = gui.addFolder('光照设置');
 	var sklight1 = f_lights.addColor( parameters, 'ambicolor' ).name('环境光').listen();
 	sklight1.onChange(function(value){   light1.color = new THREE.Color(value);  	});
@@ -501,6 +504,7 @@ if( SUPPORTS_LOCAL_STORAGE ){
 	sklight3.onChange(function(value){   light3.color = new THREE.Color(value);  	});
 	var sklight4 = f_lights.addColor( parameters, 'headcolor' ).name('前照灯').listen();
 	sklight4.onChange(function(value){   headlight.color = new THREE.Color(value);  	});
+	*/
 	gui.open();
 	f_clips.open;
 	parameters.gclipxmax = clipMAX;
@@ -512,11 +516,11 @@ if( SUPPORTS_LOCAL_STORAGE ){
 
 }
     // 添加主项“操作说明”
-    var controls = gui.addFolder('操作说明（按下对应按键并在视图中拖动）');
+    var controls = gui.addFolder('操作说明');
     // 添加纯文本说明
-    controls.add({ text: "[鼠标左键]" }, 'text').name("旋转视图").listen();
-    controls.add({ text: "[鼠标滚轮][鼠标中键]" }, 'text').name("缩放视图").listen();
-    controls.add({ text: "[Shift+鼠标中键][右键]" }, 'text').name("平移视图").listen();
+    controls.add({ text: "[鼠标左键][单指移动]" }, 'text').name("旋转视图").listen();
+    controls.add({ text: "[鼠标滚轮][两指缩放]" }, 'text').name("缩放视图").listen();
+    controls.add({ text: "[鼠标右键][三指平移]" }, 'text').name("平移视图").listen();
     // 开启折叠效果
     // controls.open();
 }

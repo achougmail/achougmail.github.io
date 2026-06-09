@@ -1,0 +1,24 @@
+body {
+	margin: 0px;
+	overflow: hidden;
+}
+#container {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+}
+#modal{display:none;}
+.lt-cell {
+	background: #A9D0F5;
+	font-size: x-large;
+	font-weight: bold;
+}
+.lt-cell:hover{
+	background: #F7BE81;
+	font-size: x-large;
+	font-weight: bold;
+}
+.modalBody{position: fixed; z-index:1000; background: #FFFFFF; width:80%; left:10%; top:10%; height: 80%}
+.modalBK{position: fixed; z-index:999; height:100%; width:100%;background:#000; opacity: 0.9;filter: alpha(opacity=60);-moz-opacity:0.60;}
