@@ -3,7 +3,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" Content="text/html;charset=UTF-8">
-<TITLE>灵山茗筑水岸商铺模型-房产实勘员VR</TITLE>
+<TITLE>灵山茗筑水岸商铺模型-520</TITLE>
 <!--
 <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, user-scalable=no" />
 -->
@@ -41,9 +41,9 @@
 </div>
   <div id="container"></div>
 
-		  <script src="three.min.js"></script>
-		  <script src="OrbitControlsTH.min.js"></script>
-		  <script src="DAT.GUI.min.js"></script>
+		  <script src="../three.min.js"></script>
+		  <script src="../OrbitControlsTH.min.js"></script>
+		  <script src='../DAT.GUI.min.js'></script>
 		  <script src="indexgeom.js"></script>
 		
 <script type="x-shader/x-vertex" id="vertexShader">
@@ -96,13 +96,13 @@
 	renderer.shadowMap.enabled = true;
 	renderer.shadowMap.type = THREE.PCFShadowMap;
     scene = new THREE.Scene();
-	var scene_length = 25346;
+	var scene_length = 26782;
     camera = new THREE.PerspectiveCamera(35.0, aspr, 10, scene_length*5);
     scene.add(camera);
     light1 = new THREE.AmbientLight(0xbbbbbb);
     scene.add( light1 );
     light2 = new THREE.DirectionalLight(0xcccccc, 1.0);
-	tpos =new THREE.Vector3( 908.1318591588696,355.200000000001,-751.0756771654696 );
+	tpos =new THREE.Vector3( 923.5611150656803,355.2000000000025,-838.7788160041788 );
 	sunvec = new THREE.Vector3( -0.820612987150054,0.5713831668297157,-0.010751836322723501 );
 	sunvec.setLength( scene_length / 2 );
     light2.position.set(sunvec.x + tpos.x , sunvec.y + tpos.y, sunvec.z + tpos.z);
@@ -161,8 +161,8 @@
 	controls.maxPolarAngle = Math.PI; 
 	controls.minDistance = 0;
 	controls.maxDistance = scene_length*0.5;
-	controls.object.position.set( -843.919,1009.301,-648.381 );
-	controls.target = new THREE.Vector3( 1152.875,275.802,-824.536 ); 
+	controls.object.position.set( -546.784,1404.123,356.303 );
+	controls.target = new THREE.Vector3( 1376.888,189.039,-881.734 ); 
 	controls.lookaround = false;
 	controls.flyspeed = 50;
 	
@@ -171,7 +171,7 @@
 	
 	
     // init materials
-	codeclips = "vec3 clipDIST = vec3( 1695.433,710.400,1745.087 ) + vec3(40,40,40);vec3 clipBASE = vec3( 60.415,-0.000,-1623.619 ) - vec3(20,20,20);"
+	codeclips = "vec3 clipDIST = vec3( 1726.292,710.400,1920.494 ) + vec3(40,40,40);vec3 clipBASE = vec3( 60.415,-0.000,-1799.026 ) - vec3(20,20,20);"
     for(var i=0; i < mat.length; i++){
      materials[i] = new THREE.ShaderMaterial( {
 		uniforms: THREE.UniformsUtils.merge([
@@ -433,7 +433,7 @@ if( SUPPORTS_LOCAL_STORAGE ){
 	};
 	// var skpage = gui.add( parameters, '多场景选择');
 	// scenetable = '<table border="5" bordercolor="#ffffff" style="table-layout:fixed;" width="100%" height="100%"><tr>'
-+ '<td class="lt-cell" onclick="scenechange([1755.848,710.400,121.468],[908.132,355.200,-751.076],45)">环绕观察视图</td>'
++ '<td class="lt-cell" onclick="scenechange([1786.707,710.400,121.468],[923.561,355.200,-838.779],45)">环绕观察视图</td>'
 + '</tr></table>';
 	// document.getElementById('sceneselect').innerHTML = scenetable;
 	// var sklookaround = gui.add( parameters, 'lookaround' ).name('环绕观察').listen();
