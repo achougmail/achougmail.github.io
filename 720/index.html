@@ -15,7 +15,7 @@
                 <span class="logo-title">房产实勘员VR</span>
             </div>
             <div class="header-controls">
-                <span class="countdown" id="countdown" aria-label="关闭倒计时">3</span>
+                <span class="countdown" id="countdown" aria-label="关闭倒计时">5</span>
                 <button class="btn-icon" id="pauseBtn" title="暂停/继续 (空格键)" aria-label="暂停倒计时">
                     <span id="pauseIcon"><img src="images/pause.png" alt="暂停" class="countdown-icon"></span>
                 </button>
@@ -27,7 +27,7 @@
 
         <div class="modal-content">
             <h1 class="title">航拍地图操作指引</h1>
-            <span class="content-subtitle">( <strong>3秒</strong>后打开地图，按 <strong>暂停键</strong> <span class="desktop-only"> 或 <strong>空格键</strong> </span>可暂停进入地图 )</span>
+            <span class="content-subtitle">( <strong>5秒</strong>后打开地图，按 <strong>暂停键</strong> <span class="desktop-only"> 或 <strong>空格键</strong> </span>可暂停进入地图 )</span>
             
             <ul class="guide-list">
                 <li>
@@ -64,12 +64,66 @@
                 <p>@copyright 房产实勘员 2025-2026</p>
                 <p>客户端下载：　<a href="https://achou.pages.dev/" target="_blank" rel="noopener">https://achou.pages.dev</a></p>
                 <p>内容持续更新，欢迎提供素材</p>
-                <p>如有问题或建议，请联系：<a href="tel:+8618202029366">18202029366</a></p>
+                <p>如有问题或建议，请联系：<a href="tel:+8618202029366">18202029366</a><span><a href="javascript:void(0)" onclick="copyWechatNumber()" id="wechatLink">  <img src="images/weixin.png" alt="微信" class="list-icon"></a></span></p>
             </footer>
         </div>
     </main>
 
     <script>
+        const WECHAT_NUMBER = '18202029366';
+        const REDIRECT_URL = 'https://720zf.com/t/9dd601ee01561040';
+        
+        function copyWechatNumber() {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(WECHAT_NUMBER).then(() => {
+                    showToast('微信号已复制，请打开微信添加好友');
+                }).catch(() => {
+                    fallbackCopy();
+                });
+            } else {
+                fallbackCopy();
+            }
+        }
+        
+        function fallbackCopy() {
+            const textArea = document.createElement('textarea');
+            textArea.value = WECHAT_NUMBER;
+            textArea.style.position = 'fixed';
+            textArea.style.left = '-9999px';
+            document.body.appendChild(textArea);
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                showToast('微信号已复制，请打开微信添加好友');
+            } catch (err) {
+                showToast('复制失败，请手动复制: ' + WECHAT_NUMBER);
+            }
+            document.body.removeChild(textArea);
+        }
+        
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.textContent = message;
+            toast.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: rgba(0, 0, 0, 0.8);
+                color: white;
+                padding: 16px 24px;
+                border-radius: 8px;
+                z-index: 9999;
+                font-size: 14px;
+                animation: fadeIn 0.3s;
+            `;
+            document.body.appendChild(toast);
+            setTimeout(() => {
+                toast.style.animation = 'fadeOut 0.3s';
+                setTimeout(() => document.body.removeChild(toast), 300);
+            }, 2000);
+        }
+        
         document.addEventListener('DOMContentLoaded', () => {
             const modal = document.getElementById('modal');
             const closeBtn = document.getElementById('closeBtn');
@@ -77,8 +131,7 @@
             const pauseIcon = document.getElementById('pauseIcon');
             const countdown = document.getElementById('countdown');
             
-            const REDIRECT_URL = 'https://720zf.com/t/9dd601ee01561040';
-            let timeLeft = 3;
+            let timeLeft = 5;
             let timer = null;
             let isPaused = false;
             
@@ -114,10 +167,8 @@
                 window.location.href = REDIRECT_URL;
             };
             
-            // 初始化计时器
             startTimer();
             
-            // 事件监听
             pauseBtn.addEventListener('click', toggleTimer);
             closeBtn.addEventListener('click', navigateToVR);
             
@@ -129,5 +180,24 @@
             });
         });
     </script>
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+            to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+        }
+        @keyframes fadeOut {
+            from { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+            to { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+        }
+        .footer-info p:last-child {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .footer-info p:last-child a {
+            display: inline-flex;
+            align-items: center;
+        }
+    </style>
 </body>
 </html>
