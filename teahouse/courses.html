@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>课程 - 湾區茶馆</title>
+  <link rel="stylesheet" href="css/main.css">
+  <style>
+    body {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
+    }
+    .courses-container {
+      padding: 60px 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .courses-title {
+      text-align: center;
+      color: #f0c040;
+      font-size: 2rem;
+      margin-bottom: 40px;
+      font-weight: 300;
+    }
+    .course-card {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 20px;
+      border: 1px solid rgba(240, 192, 64, 0.1);
+      transition: all 0.3s ease;
+    }
+    .course-card:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(240, 192, 64, 0.3);
+      transform: translateY(-2px);
+    }
+    .course-title {
+      color: #f0c040;
+      font-size: 1.3rem;
+      margin-bottom: 12px;
+      font-weight: 500;
+    }
+    .course-desc {
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 0.95rem;
+      line-height: 1.7;
+      margin-bottom: 16px;
+    }
+    .course-info {
+      display: flex;
+      gap: 24px;
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 0.85rem;
+    }
+    .course-info span {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .coming-soon {
+      text-align: center;
+      padding: 60px 20px;
+      color: rgba(255, 255, 255, 0.4);
+      font-size: 1.1rem;
+    }
+  </style>
+</head>
+<body>
+    <!-- 顶部栏 -->
+  <div class="top-bar">
+    <div class="logo"><img src="images/logo.png" alt="湾區茶馆" height="38px"></img></div>
+    <div class="menu-label"><a href="teacher.html">有闲食茶</a></div>
+  </div>
+  
+  <div class="courses-container">
+    <h1 class="courses-title">茶艺课程</h1>
+    
+    <div class="course-card">
+      <div class="course-title">初级茶艺入门</div>
+      <div class="course-desc">
+        适合零基础学员，学习茶的基本知识、茶具认识、基本冲泡方法。通过系统学习，掌握绿茶、红茶、乌龙茶的基础冲泡技巧。
+      </div>
+      <div class="course-info">
+        <span>⏱️ 6课时</span>
+        <span>👥 小班教学</span>
+        <span>📅 周末班</span>
+      </div>
+    </div>
+    
+    <div class="course-card">
+      <div class="course-title">乌龙茶品鉴与冲泡</div>
+      <div class="course-desc">
+        深入学习武夷岩茶、安溪铁观音等乌龙茶的品鉴与冲泡艺术。了解乌龙茶的制作工艺、香气特点和品茗之道。
+      </div>
+      <div class="course-info">
+        <span>⏱️ 8课时</span>
+        <span>👥 精品小班</span>
+        <span>📅 周六下午</span>
+      </div>
+    </div>
+    
+    <div class="course-card">
+      <div class="course-title">茶道美学与礼仪</div>
+      <div class="course-desc">
+        学习茶道精神内涵，掌握茶会主持技巧、茶具美学搭配。提升个人修养，感受东方生活美学。
+      </div>
+      <div class="course-info">
+        <span>⏱️ 10课时</span>
+        <span>👥 限6人</span>
+        <span>📅 周日全天</span>
+      </div>
+    </div>
+    
+    <div class="coming-soon">
+      <p>更多精彩课程即将上线...</p>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>教师风采</title>
+<link rel="stylesheet" href="css/main.css">
+<link rel="stylesheet" href="css/teacher.css">
+</head>
+<body>
+
+<div class="slider-container teacher-mode" id="slider">
+
+  <!-- 顶部栏 -->
+  <div class="top-bar">
+    <div class="logo"><img src="images/logo.png" alt="湾區茶馆" height="38px"></img></div>
+    <div class="menu-label">有闲食茶</div>
+  </div>
+
+  <!-- 幻灯片将由 JS 动态生成 -->
+  <!-- 导航箭头 -->
+  <button class="nav-arrow nav-prev" id="prevBtn" aria-label="上一位">
+    <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg>
+  </button>
+  <button class="nav-arrow nav-next" id="nextBtn" aria-label="下一位">
+    <svg viewBox="0 0 24 24"><polyline points="9 6 15 12 9 18"></polyline></svg>
+  </button>
+
+  <!-- 指示器 -->
+  <div class="indicators" id="indicators"></div>
+
+  <!-- 进度条 -->
+  <div class="progress-bar" id="progressBar"></div>
+
+  <!-- 页码 -->
+  <div class="page-number" id="pageNumber"></div>
+  
+
+</div>
+
+<script src="js/teacher-data.js"></script>
+<script src="js/teacher.js"></script>
+
+</body>
+</html>

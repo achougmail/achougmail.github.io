@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>加载中...</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #f5f0e8 0%, #e8e0d5 100%);
+            overflow: hidden;
+        }
+
+        .loading-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 40px;
+        }
+
+        /* 盖碗整体 */
+        .gaiwan-wrapper {
+            position: relative;
+            width: 120px;
+            height: 140px;
+            animation: bounce 1.2s ease-in-out infinite;
+        }
+
+        /* 茶托（底座） */
+        .saucer {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 14px;
+            background: linear-gradient(180deg, #c9a86c 0%, #b8956a 50%, #a08055 100%);
+            border-radius: 50%;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+        }
+
+        .saucer::before {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 70px;
+            height: 6px;
+            background: linear-gradient(180deg, #d4b87a 0%, #c9a86c 100%);
+            border-radius: 50%;
+        }
+
+        /* 碗身 */
+        .bowl {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 55px;
+            background: linear-gradient(180deg, #faf6f0 0%, #f0e8d8 40%, #e8dcc8 100%);
+            border-radius: 0 0 40px 40px;
+            box-shadow: 
+                inset -4px 0 6px rgba(255,255,255,0.6),
+                inset 4px 0 6px rgba(0,0,0,0.05),
+                0 4px 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        /* 碗口边缘 */
+        .bowl::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(180deg, #e8dcc8 0%, #d4c4a8 100%);
+            border-radius: 0 0 50% 50%;
+        }
+
+        /* 碗身装饰线 */
+        .bowl::after {
+            content: '';
+            position: absolute;
+            bottom: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent 0%, #c9a86c 30%, #c9a86c 70%, transparent 100%);
+            border-radius: 1px;
+        }
+
+        /* 碗盖 */
+        .lid {
+            position: absolute;
+            bottom: 62px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 78px;
+            height: 28px;
+            background: linear-gradient(180deg, #faf6f0 0%, #f0e8d8 60%, #e8dcc8 100%);
+            border-radius: 50% 50% 40% 40%;
+            box-shadow: 
+                inset -3px 0 5px rgba(255,255,255,0.5),
+                inset 3px 0 5px rgba(0,0,0,0.04),
+                0 2px 6px rgba(0,0,0,0.08);
+        }
+
+        /* 盖钮 */
+        .knob {
+            position: absolute;
+            bottom: 88px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 16px;
+            height: 12px;
+            background: linear-gradient(180deg, #faf6f0 0%, #e8dcc8 100%);
+            border-radius: 50% 50% 40% 40%;
+            box-shadow: 
+                inset -1px 0 2px rgba(255,255,255,0.5),
+                0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        /* 热气 */
+        .steam {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 40px;
+        }
+
+        .steam-line {
+            position: absolute;
+            bottom: 0;
+            width: 3px;
+            height: 20px;
+            background: linear-gradient(180deg, rgba(200,200,200,0) 0%, rgba(180,170,160,0.3) 50%, rgba(180,170,160,0) 100%);
+            border-radius: 50%;
+            animation: steam-rise 2s ease-out infinite;
+        }
+
+        .steam-line:nth-child(1) {
+            left: 20px;
+            animation-delay: 0s;
+        }
+
+        .steam-line:nth-child(2) {
+            left: 30px;
+            height: 25px;
+            animation-delay: 0.6s;
+        }
+
+        .steam-line:nth-child(3) {
+            left: 40px;
+            animation-delay: 1.2s;
+        }
+
+        /* 跳动动画 */
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-18px);
+            }
+            60% {
+                transform: translateY(-8px);
+            }
+        }
+
+        /* 热气上升动画 */
+        @keyframes steam-rise {
+            0% {
+                transform: translateY(0) scaleY(1);
+                opacity: 0;
+            }
+            20% {
+                opacity: 0.6;
+            }
+            80% {
+                opacity: 0.3;
+            }
+            100% {
+                transform: translateY(-35px) scaleY(1.5);
+                opacity: 0;
+            }
+        }
+
+        /* 加载文字 */
+        .loading-text {
+            font-size: 16px;
+            color: #8a7a6a;
+            letter-spacing: 4px;
+            font-family: "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
+        }
+
+        .loading-text::after {
+            content: '';
+            animation: dots 1.5s steps(4, end) infinite;
+        }
+
+        @keyframes dots {
+            0% { content: ''; }
+            25% { content: '.'; }
+            50% { content: '..'; }
+            75% { content: '...'; }
+            100% { content: ''; }
+        }
+
+        /* 装饰背景圆 */
+        .bg-circle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(201, 168, 108, 0.08);
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        .bg-circle:nth-child(1) {
+            width: 300px;
+            height: 300px;
+            top: 10%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .bg-circle:nth-child(2) {
+            width: 200px;
+            height: 200px;
+            bottom: 15%;
+            right: 15%;
+            animation-delay: 1s;
+        }
+
+        .bg-circle:nth-child(3) {
+            width: 150px;
+            height: 150px;
+            top: 50%;
+            right: 25%;
+            animation-delay: 2s;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 0.5;
+            }
+            50% {
+                transform: scale(1.1);
+                opacity: 0.8;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-circle"></div>
+    <div class="bg-circle"></div>
+    <div class="bg-circle"></div>
+
+    <div class="loading-container">
+        <div class="gaiwan-wrapper">
+            <div class="steam">
+                <div class="steam-line"></div>
+                <div class="steam-line"></div>
+                <div class="steam-line"></div>
+            </div>
+            <div class="knob"></div>
+            <div class="lid"></div>
+            <div class="bowl"></div>
+            <div class="saucer"></div>
+        </div>
+        <div class="loading-text">加载中</div>
+    </div>
+</body>
+</html>

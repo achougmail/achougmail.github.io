@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>湾區茶馆</title>
+  <link rel="stylesheet" href="css/index.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- 主内容框架 -->
+    <iframe id="mainFrame" class="main-frame" src="main.html" title="湾區茶馆"></iframe>
+    
+    <!-- 底部安全区域 -->
+    <div class="safe-area-bottom"></div>
+    
+    <!-- 底部导航栏 -->
+    <nav class="tab-bar">
+      <div class="tab-item active" data-url="main.html">
+        <div class="tab-icon-wrapper">
+          <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+            <polyline points="9 22 9 12 15 12 15 22"/>
+          </svg>
+        </div>
+        <span class="tab-label">主页</span>
+      </div>
+      
+      <div class="tab-item" data-url="teacher.html">
+        <div class="tab-icon-wrapper">
+          <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+            <circle cx="12" cy="7" r="4"/>
+          </svg>
+        </div>
+        <span class="tab-label">老师</span>
+      </div>
+      
+      <div class="tab-item" data-url="https://720zf.com/t/e50dfb41c156fcf7">
+        <div class="tab-icon-wrapper">
+          <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/>
+            <line x1="8" y1="2" x2="8" y2="18"/>
+            <line x1="16" y1="6" x2="16" y2="22"/>
+          </svg>
+        </div>
+        <span class="tab-label">茶室</span>
+      </div>
+      
+      <div class="tab-item" data-url="courses.html">
+        <div class="tab-icon-wrapper">
+          <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 19a6 6 0 0 1-6 6H6a6 6 0 0 1-6-6V5a6 6 0 0 1 6-6h12a6 6 0 0 1 6 6v14z"/>
+            <path d="M14 2H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2h-8z"/>
+            <path d="M14 2v6h6M6 16v-6H4"/>
+          </svg>
+        </div>
+        <span class="tab-label">课程</span>
+      </div>
+      
+      <div class="tab-item" data-url="about.html">
+        <div class="tab-icon-wrapper">
+          <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M12 16v-4M12 8h.01"/>
+          </svg>
+        </div>
+        <span class="tab-label">关于</span>
+      </div>
+    </nav>
+  </div>
+
+  <script>
+    // 获取元素
+    const mainFrame = document.getElementById('mainFrame');
+    const tabItems = document.querySelectorAll('.tab-item');
+    
+    // 导航点击事件
+    tabItems.forEach(item => {
+      item.addEventListener('click', function() {
+        const url = this.getAttribute('data-url');
+        
+        // 更新活动状态
+        tabItems.forEach(tab => tab.classList.remove('active'));
+        this.classList.add('active');
+        
+        // 更新 iframe 内容
+        if (url && mainFrame.src !== url) {
+          mainFrame.src = url;
+        }
+      });
+    });
+    
+    // 监听 iframe 加载完成
+    mainFrame.addEventListener('load', function() {
+      // 可以在这里添加加载完成后的处理
+    });
+  </script>
+</body>
+</html>

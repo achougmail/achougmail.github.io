@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>湾區茶馆</title>
+<link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+
+<div class="slider-container" id="slider">
+
+  <!-- 顶部栏 -->
+  <div class="top-bar">
+    <div class="logo"><img src="images/logo.png" alt="湾區茶馆" height="38px"></img></div>
+    <div class="menu-label">有闲食茶</div>
+  </div>
+
+  <!-- 幻灯片将由 JS 动态生成 -->
+
+  <!-- 导航箭头 -->
+  <button class="nav-arrow nav-prev" id="prevBtn" aria-label="上一位">
+    <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg>
+  </button>
+  <button class="nav-arrow nav-next" id="nextBtn" aria-label="下一位">
+    <svg viewBox="0 0 24 24"><polyline points="9 6 15 12 9 18"></polyline></svg>
+  </button>
+
+  <!-- 指示器 -->
+  <div class="indicators" id="indicators"></div>
+
+  <!-- 进度条 -->
+  <div class="progress-bar" id="progressBar"></div>
+
+  <!-- 页码 -->
+  <div class="page-number" id="pageNumber"></div>
+
+</div>
+
+<!-- 关于湾區茶馆内容区 -->
+<div class="bottom-section" id="aboutSection"></div>
+
+<!-- 业务信息区 -->
+<div class="gallery-section" id="businessSection"></div>
+
+<!-- 客户寄言区 -->
+<div class="testimonial-section">
+  <h2 class="testimonial-title">客户寄语</h2>
+  <div class="testimonial-slider" id="testimonialSlider">
+    <div class="testimonial-track" id="testimonialTrack"></div>
+  </div>
+  <div class="testimonial-dots" id="testimonialDots"></div>
+</div>
+
+<!-- 地图区域 -->
+<div class="map-section">
+  <h2 class="map-title">有闲食茶</h2>
+  <div class="map-wrapper" id="mapWrapper">
+    <div id="smallMap" class="small-map-container"></div>
+  </div>
+</div>
+
+<!-- 地图弹窗 -->
+<div class="map-modal" id="mapModal">
+  <div class="map-modal-overlay"></div>
+  <div class="map-modal-content">
+    <button class="map-modal-close" id="mapModalClose">×</button>
+    <div class="map-modal-header">
+      <h3>湾區茶馆创享湾店</h3>
+      <p>广州市南沙区创享湾3栋一楼</p>
+    </div>
+    <div class="map-modal-body">
+      <div id="modalMap" class="modal-map-container"></div>
+    </div>
+    <div class="map-modal-footer">
+      <button class="map-modal-nav-btn" id="mapModalNavBtn">点击导航到这里</button>
+      <p class="map-modal-tip">支持高德地图、百度地图、腾讯地图等导航软件</p>
+    </div>
+  </div>
+</div>
+
+<!-- 版权信息区 -->
+<div class="footer-section">
+  <p class="footer-text">&copy; 2026 湾區茶馆 版权所有</p>
+  <p class="footer-text">地址：广州市 南沙区 创享湾3栋一楼湾區茶馆</p>
+  <p class="footer-text">联系电话：<a href="tel:18826251716">18826251716</a></p>
+  <p class="footer-text">制作及技术支持：沈炎秋</p>
+</div>
+
+<script src="js/main-data.js"></script>
+  <script src="js/main-about-data.js"></script>
+  <script src="js/main.js"></script>
+  <script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.15&key=您的高德地图APIKey"></script>
+
+</body>
+</html>
