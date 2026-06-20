@@ -32,6 +32,27 @@
 	}
 	.modalBody{position: fixed; z-index:1000; background: #FFFFFF; width:80%; left:10%; top:10%; height: 80%}
 	.modalBK{position: fixed; z-index:999; height:100%; width:100%;background:#000; opacity: 0.9;filter: alpha(opacity=60);-moz-opacity:0.60;}
+	#loader {
+	content: url(../common/images/loading-logo.png);
+	position: absolute;
+	left: 45%;
+	top: 30%;
+	width: 160px;
+	margin: 0;
+	padding: 0;
+}
+
+#preloader {
+	position: fixed;
+	top: 5px;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background: #151515;
+	z-index: 901;
+	height: 100%;
+	width: 100%;
+}
 </style>
 </head>
 <body style="overflow: hidden;height: 100%;">
@@ -41,9 +62,11 @@
 </div>
   <div id="container"></div>
 
-		  <script src="../three.min.js"></script>
-		  <script src="../OrbitControlsTH.min.js"></script>
-		  <script src='../DAT.GUI.min.js'></script>
+		  <script src="../common/js/three.min.js"></script>
+		  <script src="../common/js/OrbitControlsTH.min.js"></script>
+		  <script src="../common/js/DAT.GUI.min.js"></script>
+		   <script src="../common/js/jquery-2.1.3.min.js"></script>
+   		  <script src="../common/js/main.js"></script>
 		  <script src="indexgeom.js"></script>
 		
 <script type="x-shader/x-vertex" id="vertexShader">
@@ -96,13 +119,13 @@
 	renderer.shadowMap.enabled = true;
 	renderer.shadowMap.type = THREE.PCFShadowMap;
     scene = new THREE.Scene();
-	var scene_length = 739797;
+	var scene_length = 739740;
     camera = new THREE.PerspectiveCamera(35.0, aspr, 10, scene_length*5);
     scene.add(camera);
     light1 = new THREE.AmbientLight(0xbbbbbb);
     scene.add( light1 );
     light2 = new THREE.DirectionalLight(0xcccccc, 1.0);
-	tpos =new THREE.Vector3( 25929.688066980394,6349.999999999998,-22848.409085259187 );
+	tpos =new THREE.Vector3( 25931.72551139091,6349.999999999998,-22850.446529669705 );
 	sunvec = new THREE.Vector3( -0.3736544121276449,0.49370607483546075,0.7852621804009834 );
 	sunvec.setLength( scene_length / 2 );
     light2.position.set(sunvec.x + tpos.x , sunvec.y + tpos.y, sunvec.z + tpos.z);
@@ -161,8 +184,8 @@
 	controls.maxPolarAngle = Math.PI; 
 	controls.minDistance = 0;
 	controls.maxDistance = scene_length*0.5;
-	controls.object.position.set( 22548.381,26284.776,22812.222 );
-	controls.target = new THREE.Vector3( 26540.273,-413.013,-24371.024 ); 
+	controls.object.position.set( 24170.640,25953.564,25411.735 );
+	controls.target = new THREE.Vector3( 22941.432,896.440,-22812.693 ); 
 	controls.lookaround = false;
 	controls.flyspeed = 50;
 	
@@ -171,7 +194,7 @@
 	
 	
     // init materials
-	codeclips = "vec3 clipDIST = vec3( 53909.277,12700.000,49045.952 ) + vec3(40,40,40);vec3 clipBASE = vec3( -1024.950,-0.000,-47371.385 ) - vec3(20,20,20);"
+	codeclips = "vec3 clipDIST = vec3( 53905.202,12700.000,49041.877 ) + vec3(40,40,40);vec3 clipBASE = vec3( -1020.876,-0.000,-47371.385 ) - vec3(20,20,20);"
     for(var i=0; i < mat.length; i++){
      materials[i] = new THREE.ShaderMaterial( {
 		uniforms: THREE.UniformsUtils.merge([
@@ -433,7 +456,7 @@ if( SUPPORTS_LOCAL_STORAGE ){
 	};
 	// var skpage = gui.add( parameters, '多场景选择');
 	// scenetable = '<table border="5" bordercolor="#ffffff" style="table-layout:fixed;" width="100%" height="100%"><tr>'
-+ '<td class="lt-cell" onclick="scenechange([52884.327,12700.000,1674.567],[25929.688,6350.000,-22848.409],45)">环绕观察视图</td>'
++ '<td class="lt-cell" onclick="scenechange([52884.327,12700.000,1670.492],[25931.726,6350.000,-22850.447],45)">环绕观察视图</td>'
 + '</tr></table>';
 	// document.getElementById('sceneselect').innerHTML = scenetable;
 	// var sklookaround = gui.add( parameters, 'lookaround' ).name('环绕观察').listen();
@@ -552,5 +575,8 @@ function texture_show(chk){
   }
 
 </script>
+<div id="preloader"> 
+	<div id="loader"></div>
+</div> 
 
 </body></html>
