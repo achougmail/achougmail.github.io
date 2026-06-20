@@ -64,9 +64,9 @@
 
 		  <script src="../common/js/three.min.js"></script>
 		  <script src="../common/js/OrbitControlsTH.min.js"></script>
-		  <script src="../common/js/DAT.GUI.min.js"></script>
-		   <script src="../common/js/jquery-2.1.3.min.js"></script>
-   		  <script src="../common/js/main.js"></script>
+		  <script src='../common/js/DAT.GUI.min.js'></script>
+		  <script src='../common/js/jquery-2.1.3.min.js'></script>
+		  <script src='../common/js/main.js'></script>
 		  <script src="indexgeom.js"></script>
 		
 <script type="x-shader/x-vertex" id="vertexShader">
@@ -119,13 +119,13 @@
 	renderer.shadowMap.enabled = true;
 	renderer.shadowMap.type = THREE.PCFShadowMap;
     scene = new THREE.Scene();
-	var scene_length = 739740;
+	var scene_length = 830654;
     camera = new THREE.PerspectiveCamera(35.0, aspr, 10, scene_length*5);
     scene.add(camera);
     light1 = new THREE.AmbientLight(0xbbbbbb);
     scene.add( light1 );
     light2 = new THREE.DirectionalLight(0xcccccc, 1.0);
-	tpos =new THREE.Vector3( 25931.72551139091,6349.999999999998,-22850.446529669705 );
+	tpos =new THREE.Vector3( 28677.799633684914,6191.8,-26620.085100161166 );
 	sunvec = new THREE.Vector3( -0.3736544121276449,0.49370607483546075,0.7852621804009834 );
 	sunvec.setLength( scene_length / 2 );
     light2.position.set(sunvec.x + tpos.x , sunvec.y + tpos.y, sunvec.z + tpos.z);
@@ -184,8 +184,8 @@
 	controls.maxPolarAngle = Math.PI; 
 	controls.minDistance = 0;
 	controls.maxDistance = scene_length*0.5;
-	controls.object.position.set( 24170.640,25953.564,25411.735 );
-	controls.target = new THREE.Vector3( 22941.432,896.440,-22812.693 ); 
+	controls.object.position.set( 31739.253,42697.364,28150.165 );
+	controls.target = new THREE.Vector3( 27753.160,6248.642,-13587.112 ); 
 	controls.lookaround = false;
 	controls.flyspeed = 50;
 	
@@ -194,7 +194,7 @@
 	
 	
     // init materials
-	codeclips = "vec3 clipDIST = vec3( 53905.202,12700.000,49041.877 ) + vec3(40,40,40);vec3 clipBASE = vec3( -1020.876,-0.000,-47371.385 ) - vec3(20,20,20);"
+	codeclips = "vec3 clipDIST = vec3( 59401.543,13016.400,56585.346 ) + vec3(40,40,40);vec3 clipBASE = vec3( -1022.972,-316.400,-54912.758 ) - vec3(20,20,20);"
     for(var i=0; i < mat.length; i++){
      materials[i] = new THREE.ShaderMaterial( {
 		uniforms: THREE.UniformsUtils.merge([
@@ -456,7 +456,7 @@ if( SUPPORTS_LOCAL_STORAGE ){
 	};
 	// var skpage = gui.add( parameters, '多场景选择');
 	// scenetable = '<table border="5" bordercolor="#ffffff" style="table-layout:fixed;" width="100%" height="100%"><tr>'
-+ '<td class="lt-cell" onclick="scenechange([52884.327,12700.000,1670.492],[25931.726,6350.000,-22850.447],45)">环绕观察视图</td>'
++ '<td class="lt-cell" onclick="scenechange([58378.571,12700.000,1672.588],[28677.800,6191.800,-26620.085],45)">环绕观察视图</td>'
 + '</tr></table>';
 	// document.getElementById('sceneselect').innerHTML = scenetable;
 	// var sklookaround = gui.add( parameters, 'lookaround' ).name('环绕观察').listen();
