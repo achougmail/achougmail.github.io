@@ -23,15 +23,9 @@
   /* 底部操作提示信息 */
   #info {
     position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%); z-index: 10;
-    background: rgba(20, 20, 20, 0.75); padding: 10px 14px; border-radius: 8px;
+    background: rgba(20, 20, 20, 0.75); padding: 10px 20px; border-radius: 8px;
     font-size: 12px; line-height: 1.6; border: 1px solid rgba(255,255,255,0.1);
-    text-align: center;
-  }
-  #info .desktop-hint { display: block; }
-  #info .mobile-hint { display: none; }
-  @media (max-width: 768px) {
-    #info .desktop-hint { display: none; }
-    #info .mobile-hint { display: block; }
+    text-align: center; max-width: 90%; white-space: nowrap;
   }
   /* 加载遮罩层 */
   #loading {
@@ -57,6 +51,32 @@
   /* 左上角Logo */
   #logo { position: absolute; top: 16px; left: 16px; z-index: 10; cursor: pointer; }
   #logo img { width: 48px; height: 48px; border-radius: 8px; display: block; }
+  /* 竖条工具栏 */
+  #sidebar {
+    position: absolute; top: 80px; left: 16px; z-index: 10;
+    background: rgba(20, 20, 20, 0.75); backdrop-filter: blur(6px);
+    padding: 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);
+    display: flex; flex-direction: column; gap: 10px; align-items: center;
+  }
+  #sidebar label { font-size: 11px; color: #ccc; cursor: pointer; display: flex; align-items: center; gap: 6px; }
+  /* 苹果风格开关 */
+  #sidebar input[type="checkbox"] {
+    -webkit-appearance: none; appearance: none;
+    width: 36px; height: 20px; border-radius: 10px;
+    background: #39393D; outline: none; cursor: pointer;
+    transition: background 0.3s;
+  }
+  #sidebar input[type="checkbox"]::before {
+    content: ''; display: block; width: 16px; height: 16px;
+    border-radius: 50%; background: #fff; margin: 2px;
+    transition: transform 0.3s; box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  }
+  #sidebar input[type="checkbox"]:checked {
+    background: #34C759;
+  }
+  #sidebar input[type="checkbox"]:checked::before {
+    transform: translateX(16px);
+  }
 </style>
 </head>
 <body>
@@ -68,7 +88,12 @@
     <img src="../common/images/logo.png" alt="Logo" />
   </div>
 
-  <!-- 左上角工具栏（已隐藏） -->
+  <!-- 竖条工具栏 -->
+  <div id="sidebar">
+    <label><input type="checkbox" id="edgeToggle" checked />边线</label>
+  </div>
+
+  <!-- 左上角工具栏（默认隐藏，点击logo显示） -->
   <div id="toolbar">
     <div style="display: flex; flex-direction: column; gap: 6px;">
       <label>加载模型：<input type="file" id="fileInput" accept=".glb,.gltf,.obj,.ply" /></label>
@@ -78,8 +103,7 @@
 
   <!-- 底部操作提示 -->
   <div id="info">
-    <div class="desktop-hint"></div>操作：左键旋转 · 右键平移 · 滚轮缩放</div>
-    <div class="mobile-hint">操作：划动旋转 · 双指平移 · 捏合缩放</div>
+    操作：左键旋转 · 右键平移 · 滚轮缩放<br/>
     @Copyright 房产实勘员VR 2026 
   </div>
 
@@ -121,9 +145,10 @@
     const errorEl = document.getElementById('error');
     const fileInput = document.getElementById('fileInput');
 
-    // 全局变量：场景、相机、渲染器、控制器、当前模型、动画ID
+    // 全局变量：场景、相机、渲染器、控制器、当前模型、动画ID、边线数组
     let scene, camera, renderer, controls, currentModel;
     let animationId;
+    const edgeLines = [];
 
     // 显示加载遮罩
     function showLoading(text, sub) {
@@ -169,14 +194,14 @@
       container.appendChild(renderer.domElement);
 
       // 添加半球光（环境光）
-      const hemi = new THREE.HemisphereLight(0xffffff, 0x909090, 0.8);
+      const hemi = new THREE.HemisphereLight(0xffffff, 0x909090, 1);
       scene.add(hemi);
       // 添加主方向光
-      const dir = new THREE.DirectionalLight(0xffffff, 1.0);
+      const dir = new THREE.DirectionalLight(0xedfaff, 1.0);
       dir.position.set(50, 80, 50);
       scene.add(dir);
       // 添加辅助方向光
-      const dir2 = new THREE.DirectionalLight(0xffffff, 0.4);
+      const dir2 = new THREE.DirectionalLight(0xffffff, 0.6);
       dir2.position.set(-50, 30, -50);
       scene.add(dir2);
 
@@ -245,7 +270,7 @@
       const maxDim = Math.max(size.x, size.y, size.z);
       const fov = camera.fov * (Math.PI / 180);
       // 计算相机距离，使模型占屏幕50%
-      const distance = Math.abs(maxDim / 2 / Math.tan(fov / 2)) * 2.0;
+      const distance = Math.abs(maxDim / 2 / Math.tan(fov / 2)) * 1.0;
 
       // 设置相机位置
       camera.position.set(distance, distance * 0.7, distance);
@@ -291,11 +316,26 @@
 
       const format = detectFormat(url);
 
+      // 为模型添加边线效果
+      function addEdges(object) {
+        edgeLines.length = 0;
+        object.traverse(child => {
+          if (child.isMesh) {
+            const edges = new THREE.EdgesGeometry(child.geometry, 15);
+            const line = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.3 }));
+            child.add(line);
+            edgeLines.push(line);
+          }
+        });
+      }
+
       // 模型加载成功回调
       const onLoadModel = (object) => {
         currentModel = object;
+        addEdges(object);
         scene.add(object);
         frameAndCenter(object);
+        toolbarEl.style.display = 'none';
         hideLoading();
       };
 
@@ -363,6 +403,14 @@
     const toolbarEl = document.getElementById('toolbar');
     logoEl.addEventListener('click', () => {
       toolbarEl.style.display = toolbarEl.style.display === 'flex' ? 'none' : 'flex';
+    });
+
+    // 边框开关事件
+    const edgeToggle = document.getElementById('edgeToggle');
+    edgeToggle.addEventListener('change', (e) => {
+      edgeLines.forEach(line => {
+        line.visible = e.target.checked;
+      });
     });
 
     // 初始化并自动加载index.glb
