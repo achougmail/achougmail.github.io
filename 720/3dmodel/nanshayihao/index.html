@@ -270,7 +270,7 @@
       const maxDim = Math.max(size.x, size.y, size.z);
       const fov = camera.fov * (Math.PI / 180);
       // 计算相机距离，使模型占屏幕50%
-      const distance = Math.abs(maxDim / 2 / Math.tan(fov / 2)) * 1.0;
+      const distance = Math.abs(maxDim / 2 / Math.tan(fov / 2)) * 0.8;
 
       // 设置相机位置
       camera.position.set(distance, distance * 0.7, distance);
@@ -415,7 +415,7 @@
 
     // 初始化并自动加载index.glb
     init();
-    loadFromURL('index.glb');
+    loadFromURL('model.glb');
   </script>
 </body>
 </html>
