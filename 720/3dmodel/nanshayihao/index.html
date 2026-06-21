@@ -178,6 +178,7 @@
     function init() {
       // 创建场景
       scene = new THREE.Scene();
+      // 设置场景背景颜色
       scene.background = new THREE.Color(0x1a1a1a);
 
       // 创建透视相机
@@ -190,14 +191,14 @@
       renderer.setSize(container.clientWidth, container.clientHeight);
       renderer.outputColorSpace = THREE.SRGBColorSpace;
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
-      renderer.toneMappingExposure = 1.0;
+      renderer.toneMappingExposure = 1.5;
       container.appendChild(renderer.domElement);
 
       // 添加半球光（环境光）
-      const hemi = new THREE.HemisphereLight(0xffffff, 0x909090, 1);
+      const hemi = new THREE.HemisphereLight(0xffffff, 0x909090, 1.0);
       scene.add(hemi);
       // 添加主方向光
-      const dir = new THREE.DirectionalLight(0xedfaff, 1.0);
+      const dir = new THREE.DirectionalLight(0xedfaff, 1.3);
       dir.position.set(50, 80, 50);
       scene.add(dir);
       // 添加辅助方向光
@@ -322,9 +323,24 @@
         object.traverse(child => {
           if (child.isMesh) {
             const edges = new THREE.EdgesGeometry(child.geometry, 15);
-            const line = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.3 }));
+            const line = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.8 }));
             child.add(line);
             edgeLines.push(line);
+          }
+        });
+      }
+
+      // 将模型材质改为亚光效果
+      function makeMatte(object) {
+        object.traverse(child => {
+          if (child.isMesh && child.material) {
+            const materials = Array.isArray(child.material) ? child.material : [child.material];
+            materials.forEach(m => {
+              if (m.isMeshStandardMaterial || m.isMeshPhysicalMaterial) {
+                m.roughness = 0.95;
+                m.metalness = 0;
+              }
+            });
           }
         });
       }
@@ -332,6 +348,7 @@
       // 模型加载成功回调
       const onLoadModel = (object) => {
         currentModel = object;
+        makeMatte(object);
         addEdges(object);
         scene.add(object);
         frameAndCenter(object);
@@ -357,7 +374,7 @@
           loader.load(url, (obj) => {
             obj.traverse(child => {
               if (child.isMesh && !child.material) {
-                child.material = new THREE.MeshStandardMaterial({ color: 0xcccccc, roughness: 0.8, metalness: 0.1 });
+                child.material = new THREE.MeshStandardMaterial({ color: 0xcccccc, roughness: 0.95, metalness: 0 });
               }
             });
             onLoadModel(obj);
@@ -371,8 +388,8 @@
             const material = new THREE.MeshStandardMaterial({
               color: hasColor ? 0xffffff : 0xcccccc,
               vertexColors: hasColor,
-              roughness: 0.8,
-              metalness: 0.1,
+              roughness: 0.95,
+              metalness: 0,
               side: THREE.DoubleSide,
             });
             const mesh = new THREE.Mesh(geometry, material);
@@ -413,7 +430,7 @@
       });
     });
 
-    // 初始化并自动加载index.glb
+    // 初始化并自动加载model.glb
     init();
     loadFromURL('model.glb');
   </script>
