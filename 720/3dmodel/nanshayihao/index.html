@@ -13,19 +13,37 @@
   #container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
   /* 左上角工具栏（已隐藏，加载模型功能） */
   #toolbar {
-    position: absolute; top: 16px; left: 50%; transform: translateX(-50%); z-index: 10;
+    position: absolute; top: 16px; left: 80px; z-index: 10;
     background: rgba(20, 20, 20, 0.75); backdrop-filter: blur(6px);
     padding: 10px 14px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);
-    display: none; gap: 10px; align-items: center;
+    display: none; flex-direction: column; gap: 8px; align-items: stretch; min-width: 200px;
   }
   #toolbar label { font-size: 13px; }
-  #toolbar input[type="file"] { color: #ccc; font-size: 12px; max-width: 260px; }
+  #toolbar input[type="file"] { color: #ccc; font-size: 12px; max-width: 180px; }
+  /* 工具栏关闭按钮 */
+  #toolbarClose {
+    position: absolute; top: 6px; right: 6px;
+    width: 22px; height: 22px; border: none; border-radius: 4px;
+    background: rgba(255,255,255,0.1); color: #aaa; font-size: 18px;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s, color 0.2s;
+  }
+  #toolbarClose:hover { background: rgba(255,255,255,0.2); color: #fff; }
   /* 底部操作提示信息 */
   #info {
-    position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%); z-index: 10;
+    position: absolute; bottom: 16px; right: 16px; z-index: 10;
     background: rgba(20, 20, 20, 0.75); padding: 10px 20px; border-radius: 8px;
     font-size: 12px; line-height: 1.6; border: 1px solid rgba(255,255,255,0.1);
     text-align: center; max-width: 90%; white-space: nowrap;
+  }
+  /* 桌面端提示：默认显示  */
+  .desktop-hint { display: inline; }
+  /* 移动端提示：默认隐藏 */
+  .mobile-hint { display: none; }
+  /* 移动端设备（屏幕宽度小于768px或触摸设备） */
+  @media (max-width: 768px), (hover: none) {
+    .desktop-hint { display: none; }
+    .mobile-hint { display: inline; }
   }
   /* 加载遮罩层 */
   #loading {
@@ -51,13 +69,24 @@
   /* 左上角Logo */
   #logo { position: absolute; top: 16px; left: 16px; z-index: 10; cursor: pointer; }
   #logo img { width: 48px; height: 48px; border-radius: 8px; display: block; }
-  /* 竖条工具栏 */
+  /* 底部菜单按钮 */
+  #menuBtn {
+    position: absolute; bottom: 16px; left: 16px; z-index: 10;
+    background: rgba(20, 20, 20, 0.75); backdrop-filter: blur(6px);
+    padding: 10px 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: background 0.2s;
+  }
+  #menuBtn:hover { background: rgba(40, 40, 40, 0.85); }
+  #menuBtn svg { width: 20px; height: 20px; fill: #ccc; }
+  /* 竖条工具栏（菜单面板） */
   #sidebar {
-    position: absolute; top: 80px; left: 16px; z-index: 10;
+    position: absolute; bottom: 70px; left: 16px; z-index: 20;
     background: rgba(20, 20, 20, 0.75); backdrop-filter: blur(6px);
     padding: 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);
-    display: flex; flex-direction: column; gap: 10px; align-items: center;
+    display: none; flex-direction: column; gap: 10px; align-items: center;
   }
+  #sidebar.active { display: flex; }
   #sidebar label { font-size: 11px; color: #ccc; cursor: pointer; display: flex; align-items: center; gap: 6px; }
   /* 苹果风格开关 */
   #sidebar input[type="checkbox"] {
@@ -77,6 +106,37 @@
   #sidebar input[type="checkbox"]:checked::before {
     transform: translateX(16px);
   }
+  /* Z轴剖切面滑动条容器 */
+  #clipSliderBar {
+    position: absolute; bottom: 90px; left: 50%; transform: translateX(-50%); z-index: 10;
+    background: rgba(20, 20, 20, 0.75); backdrop-filter: blur(6px);
+    padding: 8px 16px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);
+    display: none; gap: 12px; align-items: center;
+  }
+  #clipSliderBar.active { display: flex; }
+  #clipLabel { font-size: 13px; color: #ccc; white-space: nowrap; }
+  #clipValue { font-size: 13px; color: #aaa; min-width: 40px; text-align: right; }
+  /* iOS风格滑动条 */
+  #clipSlider {
+    -webkit-appearance: none; appearance: none;
+    width: 200px; height: 6px;
+    background: #34C759; border-radius: 3px;
+    outline: none;
+  }
+  #clipSlider::-webkit-slider-thumb {
+    -webkit-appearance: none; appearance: none;
+    width: 22px; height: 22px; border-radius: 50%;
+    background: #fff; box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+    cursor: pointer; transition: transform 0.15s;
+  }
+  #clipSlider::-webkit-slider-thumb:hover {
+    transform: scale(1.1);
+  }
+  #clipSlider::-moz-range-thumb {
+    width: 22px; height: 22px; border-radius: 50%; border: none;
+    background: #fff; box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+    cursor: pointer;
+  }
 </style>
 </head>
 <body>
@@ -88,23 +148,39 @@
     <img src="../common/images/logo.png" alt="Logo" />
   </div>
 
-  <!-- 竖条工具栏 -->
-  <div id="sidebar">
-    <label><input type="checkbox" id="edgeToggle" checked />边线</label>
+  <!-- 底部菜单按钮 -->
+  <div id="menuBtn">
+    <svg viewBox="0 0 24 24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
   </div>
 
-  <!-- 左上角工具栏（默认隐藏，点击logo显示） -->
+  <!-- 竖条工具栏（菜单面板） -->
+  <div id="sidebar">
+    <label><input type="checkbox" id="edgeToggle" checked />边线</label>
+    <label><input type="checkbox" id="shadowToggle" checked />阴影</label>
+    <label><input type="checkbox" id="clipToggle" />剖切</label>
+  </div>
+
+  <!-- 左上角工具栏（默认隐藏，点击logo显示）  -->
   <div id="toolbar">
+    <button id="toolbarClose" title="关闭">×</button>
     <div style="display: flex; flex-direction: column; gap: 6px;">
       <label>加载模型：<input type="file" id="fileInput" accept=".glb,.gltf,.obj,.ply" /></label>
       <span style="font-size: 11px; color: #aaa;">支持 .glb .gltf .obj .ply 格式</span>
     </div>
   </div>
 
+  <!-- Z轴剖切面滑动条（默认隐藏） -->
+  <div id="clipSliderBar">
+    <span id="clipLabel">高度剖切面</span>
+    <input type="range" id="clipSlider" min="0" max="100" value="100" step="0.1" />
+    <span id="clipValue">100</span>
+  </div>
+
   <!-- 底部操作提示 -->
   <div id="info">
-    操作：左键旋转 · 右键平移 · 滚轮缩放<br/>
-    @Copyright 房产实勘员VR 2026 
+    <span class="desktop-hint">操作：左键旋转 · 右键平移 · 滚轮缩放</span>
+    <span class="mobile-hint">操作：单指旋转 · 两指平移 · 捏合缩放</span>
+    <br/>@Copyright 房产实勘员VR 2026 
   </div>
 
   <!-- 加载遮罩 -->
@@ -145,10 +221,14 @@
     const errorEl = document.getElementById('error');
     const fileInput = document.getElementById('fileInput');
 
-    // 全局变量：场景、相机、渲染器、控制器、当前模型、动画ID、边线数组
-    let scene, camera, renderer, controls, currentModel;
+    // 全局变量：场景、相机、渲染器、控制器、当前模型、动画ID、边线数组、主光源
+    let scene, camera, renderer, controls, currentModel, mainLight;
     let animationId;
     const edgeLines = [];
+    // 剖切面相关
+    let clipPlane;
+    let clipEnabled = false;
+    let modelHeight = 100;  // 模型高度，用于剖切面范围计算
 
     // 显示加载遮罩
     function showLoading(text, sub) {
@@ -179,7 +259,7 @@
       // 创建场景
       scene = new THREE.Scene();
       // 设置场景背景颜色
-      scene.background = new THREE.Color(0x1a1a1a);
+      scene.background = new THREE.Color(0xEEEEEE);
 
       // 创建透视相机
       camera = new THREE.PerspectiveCamera(60, container.clientWidth / container.clientHeight, 0.1, 5000);
@@ -192,15 +272,30 @@
       renderer.outputColorSpace = THREE.SRGBColorSpace;
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
       renderer.toneMappingExposure = 1.5;
+      renderer.shadowMap.enabled = true;
+      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+      renderer.localClippingEnabled = true;
       container.appendChild(renderer.domElement);
+
+      // 初始化Y轴剖切面（默认不激活，值为modelHeight表示在顶部）
+      clipPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), -modelHeight);
 
       // 添加半球光（环境光）
       const hemi = new THREE.HemisphereLight(0xffffff, 0x909090, 1.0);
       scene.add(hemi);
       // 添加主方向光
-      const dir = new THREE.DirectionalLight(0xedfaff, 1.3);
-      dir.position.set(50, 80, 50);
-      scene.add(dir);
+      mainLight = new THREE.DirectionalLight(0xedfaff, 1.3);
+      mainLight.position.set(50, 80, 50);
+      mainLight.castShadow = true;
+      mainLight.shadow.mapSize.width = 2048;
+      mainLight.shadow.mapSize.height = 2048;
+      mainLight.shadow.camera.near = 0.1;
+      mainLight.shadow.camera.far = 5000;
+      mainLight.shadow.camera.left = -200;
+      mainLight.shadow.camera.right = 200;
+      mainLight.shadow.camera.top = 200;
+      mainLight.shadow.camera.bottom = -200;
+      scene.add(mainLight);
       // 添加辅助方向光
       const dir2 = new THREE.DirectionalLight(0xffffff, 0.6);
       dir2.position.set(-50, 30, -50);
@@ -211,6 +306,7 @@
       controls.enableDamping = true;  // 启用阻尼效果
       controls.dampingFactor = 0.08;  // 阻尼系数
       controls.screenSpacePanning = true;  // 允许屏幕空间平移
+      controls.zoomSpeed = 1;  // 反转滚轮缩放方向
 
       // 监听窗口大小变化
       window.addEventListener('resize', onResize);
@@ -281,9 +377,23 @@
 
       // 设置控制器目标点和最大距离
       controls.target.set(0, 0, 0);
-      controls.maxDistance = maxDim * 1.0;  // 最大距离为模型最大尺寸的1.5倍
-      controls.minDistance = distance / 3;  // 放大不超过3倍
+      controls.maxDistance = maxDim * 1.0;  // 最大距离为模型最大尺寸的1倍
+      controls.minDistance = distance / 5;  // 放大不超过4.5倍
+      controls.maxPolarAngle = Math.PI / 2;  // 限制垂直翻转角度不超过90度，确实在水平线之上
       controls.update();
+
+      // 保存模型高度，用于剖切面范围
+      modelHeight = size.y;
+      // 更新剖切面滑动条范围（0-100对应Y轴0到modelHeight）
+      const clipSlider = document.getElementById('clipSlider');
+      if (clipSlider) {
+        clipSlider.min = 0;
+        clipSlider.max = 100;
+        clipSlider.value = 100;
+        document.getElementById('clipValue').textContent = '100';
+        // 同步更新剖切面初始位置
+        clipPlane.constant = -modelHeight;
+      }
     }
 
     // 加载进度回调函数
@@ -304,6 +414,18 @@
       if (u.endsWith('.obj')) return 'obj';
       if (u.endsWith('.ply')) return 'ply';
       return 'glb';
+    }
+
+    // 为模型材质启用剖切面
+    function enableClip(object) {
+      object.traverse(child => {
+        if (child.isMesh && child.material) {
+          const materials = Array.isArray(child.material) ? child.material : [child.material];
+          materials.forEach(m => {
+            m.clippingPlanes = clipEnabled ? [clipPlane] : [];
+          });
+        }
+      });
     }
 
     /**
@@ -346,10 +468,22 @@
         });
       }
 
+      // 为模型启用阴影
+      function enableShadow(object) {
+        object.traverse(child => {
+          if (child.isMesh) {
+            child.castShadow = true;
+            child.receiveShadow = true;
+          }
+        });
+      }
+
       // 模型加载成功回调
       const onLoadModel = (object) => {
         currentModel = object;
         makeMatte(object);
+        enableShadow(object);
+        enableClip(object);
         addEdges(object);
         scene.add(object);
         frameAndCenter(object);
@@ -423,6 +557,26 @@
       toolbarEl.style.display = toolbarEl.style.display === 'flex' ? 'none' : 'flex';
     });
 
+    // 工具栏关闭按钮事件
+    const toolbarClose = document.getElementById('toolbarClose');
+    toolbarClose.addEventListener('click', () => {
+      toolbarEl.style.display = 'none';
+    });
+
+    // 底部菜单按钮事件
+    const menuBtn = document.getElementById('menuBtn');
+    const sidebar = document.getElementById('sidebar');
+    menuBtn.addEventListener('click', () => {
+      sidebar.classList.toggle('active');
+    });
+
+    // 点击屏幕任意位置时隐藏菜单
+    document.addEventListener('click', (e) => {
+      if (!menuBtn.contains(e.target) && !sidebar.contains(e.target)) {
+        sidebar.classList.remove('active');
+      }
+    });
+
     // 边框开关事件
     const edgeToggle = document.getElementById('edgeToggle');
     edgeToggle.addEventListener('change', (e) => {
@@ -430,6 +584,48 @@
         line.visible = e.target.checked;
       });
     });
+
+    // 阴影开关事件
+    const shadowToggle = document.getElementById('shadowToggle');
+    shadowToggle.addEventListener('change', (e) => {
+      mainLight.castShadow = e.target.checked;
+      if (currentModel) {
+        currentModel.traverse(child => {
+          if (child.isMesh) {
+            child.castShadow = e.target.checked;
+            child.receiveShadow = e.target.checked;
+          }
+        });
+      }
+    });
+
+    // 剖切面开关事件
+    const clipToggle = document.getElementById('clipToggle');
+    const clipSliderBar = document.getElementById('clipSliderBar');
+    const clipSlider = document.getElementById('clipSlider');
+    const clipValue = document.getElementById('clipValue');
+
+    function updateClipPlane() {
+      const value = parseFloat(clipSlider.value);
+      // 滑动条 0 = 底部，滑动条100 = 顶部(modelHeight)
+      // Plane: y + constant = 0，即 y = -constant
+      const targetY = (value / 100) * modelHeight;
+      clipPlane.constant = -targetY;
+      clipValue.textContent = value.toFixed(1);
+      if (currentModel) {
+        enableClip(currentModel);
+      }
+    }
+
+    clipToggle.addEventListener('change', (e) => {
+      clipEnabled = e.target.checked;
+      clipSliderBar.classList.toggle('active', clipEnabled);
+      if (currentModel) {
+        enableClip(currentModel);
+      }
+    });
+
+    clipSlider.addEventListener('input', updateClipPlane);
 
     // 初始化并自动加载model.glb
     init();
