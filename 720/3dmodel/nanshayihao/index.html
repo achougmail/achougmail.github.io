@@ -106,6 +106,74 @@
   #sidebar input[type="checkbox"]:checked::before {
     transform: translateX(16px);
   }
+  #clipSliderBar button { 
+    width: 20px; height: 20px; border: none; border-radius: 4px;
+    background: rgba(255,255,255,0.1); color: #aaa; font-size: 14px;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s, color 0.2s;
+  }
+  /* #clipSliderBar button:hover { background: rgba(255,255,255,0.2); color: #fff; } */
+  #clipSliderBar button.active { background: rgba(255,255,255,0.2); color: #fff; }
+  #clipSliderBar button.active:hover { background: #2db84d; }
+  /* 左侧中间视图工具栏 */
+  #viewToolbar {
+    position: absolute; top: 50%; left: -36px; transform: translateY(-50%); z-index: 10;
+    display: flex; flex-direction: column; gap: 3px; align-items: center;
+    background: rgba(20, 20, 20, 0.75);
+    backdrop-filter: blur(6px);
+    padding: 4px 0;
+    border-radius: 0 8px 8px 0;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-left: none;
+    width: 36px;
+    box-sizing: border-box;
+    transition: left 0.5s ease;
+  }
+  #viewToolbar.visible {
+    left: 0;
+  }
+  #viewToolbar .view-icon {
+    width: 36px; height: 36px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+    color: #ccc;
+    font-weight: 300;
+  }
+  #viewToolbar .view-icon:hover {
+    color: #fff;
+  }
+  #viewToolbar .divider {
+    width: 12px;
+    height: 0.3px;
+    background: rgba(255, 255, 255, 0.3);
+  }
+  /* 视图工具栏调出标签 */
+  #viewToolbarToggle {
+    position: absolute; top: 50%; left: 0; transform: translateY(-50%); z-index: 11;
+    width: 20px;
+    height: 60px;
+    background: rgba(20, 20, 20, 0.75);
+    backdrop-filter: blur(6px);
+    border-radius: 0 6px 6px 0;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-left: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #aaa;
+    font-size: 12px;
+    writing-mode: vertical-rl;
+    transition: left 0.5s ease, background 0.2s;
+  }
+  #viewToolbarToggle:hover {
+    background: rgba(40, 40, 40, 0.85);
+    color: #fff;
+  }
+  #viewToolbarToggle.hidden {
+    left: 36px;
+  }
   /* Z轴剖切面滑动条容器 */
   #clipSliderBar {
     position: absolute; bottom: 90px; left: 50%; transform: translateX(-50%); z-index: 10;
@@ -120,7 +188,8 @@
   #clipSlider {
     -webkit-appearance: none; appearance: none;
     width: 200px; height: 6px;
-    background: #34C759; border-radius: 3px;
+    background: linear-gradient(to right, #34C759 var(--val, 100%), #39393D var(--val, 100%));
+    border-radius: 3px;
     outline: none;
   }
   #clipSlider::-webkit-slider-thumb {
@@ -153,10 +222,22 @@
     <svg viewBox="0 0 24 24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
   </div>
 
+  <!-- 左侧中间视图工具栏 -->
+  <div id="viewToolbar">
+    <div id="isoViewBtn" class="view-icon" title="侧视图">侧</div>
+    <div class="divider"></div>
+    <div id="frontViewBtn" class="view-icon" title="正视图">正</div>
+    <div class="divider"></div>
+    <div id="topViewBtn" class="view-icon" title="顶视图">顶</div>
+  </div>
+
+  <!-- 视图工具栏调出标签 -->
+  <div id="viewToolbarToggle">视图</div>
+
   <!-- 竖条工具栏（菜单面板） -->
   <div id="sidebar">
     <label><input type="checkbox" id="edgeToggle" checked />边线</label>
-    <label><input type="checkbox" id="shadowToggle" checked />阴影</label>
+    <label><input type="checkbox" id="shadowToggle" />阴影</label>
     <label><input type="checkbox" id="clipToggle" />剖切</label>
   </div>
 
@@ -171,9 +252,10 @@
 
   <!-- Z轴剖切面滑动条（默认隐藏） -->
   <div id="clipSliderBar">
-    <span id="clipLabel">高度剖切面</span>
+    <span id="clipLabel">剖切面</span>
     <input type="range" id="clipSlider" min="0" max="100" value="100" step="0.1" />
     <span id="clipValue">100</span>
+    <button id="clipToggleBar">×</button>
   </div>
 
   <!-- 底部操作提示 -->
@@ -272,7 +354,7 @@
       renderer.outputColorSpace = THREE.SRGBColorSpace;
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
       renderer.toneMappingExposure = 1.5;
-      renderer.shadowMap.enabled = true;
+      renderer.shadowMap.enabled = false;
       renderer.shadowMap.type = THREE.PCFSoftShadowMap;
       renderer.localClippingEnabled = true;
       container.appendChild(renderer.domElement);
@@ -286,7 +368,7 @@
       // 添加主方向光
       mainLight = new THREE.DirectionalLight(0xedfaff, 1.3);
       mainLight.position.set(50, 80, 50);
-      mainLight.castShadow = true;
+      mainLight.castShadow = false;
       mainLight.shadow.mapSize.width = 2048;
       mainLight.shadow.mapSize.height = 2048;
       mainLight.shadow.camera.near = 0.1;
@@ -300,6 +382,14 @@
       const dir2 = new THREE.DirectionalLight(0xffffff, 0.6);
       dir2.position.set(-50, 30, -50);
       scene.add(dir2);
+
+      // 添加地面网格
+      const gridSize = Math.max(modelHeight, 200);
+      const grid = new THREE.GridHelper(gridSize, gridSize / 5, 0x808080, 0xcccccc);
+      grid.position.y = 0;  // 网格在模型底部（Y=0）
+      grid.material.opacity = 0.5;
+      grid.material.transparent = true;
+      scene.add(grid);
 
       // 初始化轨道控制器（鼠标交互）
       controls = new OrbitControls(camera, renderer.domElement);
@@ -360,14 +450,16 @@
       const size = box.getSize(new THREE.Vector3());
       const center = box.getCenter(new THREE.Vector3());
 
-      // 将模型中心移到原点
-      object.position.sub(center);
+      // 将模型底部移到 Y=0 位置
+      object.position.x = -center.x;
+      object.position.y = -box.min.y;  // 底部在 Y=0
+      object.position.z = -center.z;
 
       // 计算模型最大尺寸
       const maxDim = Math.max(size.x, size.y, size.z);
       const fov = camera.fov * (Math.PI / 180);
       // 计算相机距离，使模型占屏幕50%
-      const distance = Math.abs(maxDim / 2 / Math.tan(fov / 2)) * 0.8;
+      const distance = Math.abs(maxDim / 2 / Math.tan(fov / 2)) * 0.5;
 
       // 设置相机位置
       camera.position.set(distance, distance * 0.7, distance);
@@ -375,9 +467,9 @@
       camera.far = maxDim * 100;
       camera.updateProjectionMatrix();
 
-      // 设置控制器目标点和最大距离
-      controls.target.set(0, 0, 0);
-      controls.maxDistance = maxDim * 1.0;  // 最大距离为模型最大尺寸的1倍
+      // 设置控制器目标点为模型中心位置（Y=modelHeight/2）
+      controls.target.set(0, size.y / 2, 0);
+      controls.maxDistance = maxDim * 2.0;  // 最大距离为模型最大尺寸的1倍
       controls.minDistance = distance / 5;  // 放大不超过4.5倍
       controls.maxPolarAngle = Math.PI / 2;  // 限制垂直翻转角度不超过90度，确实在水平线之上
       controls.update();
@@ -390,10 +482,50 @@
         clipSlider.min = 0;
         clipSlider.max = 100;
         clipSlider.value = 100;
+        clipSlider.style.setProperty('--val', '100%');
         document.getElementById('clipValue').textContent = '100';
-        // 同步更新剖切面初始位置
-        clipPlane.constant = -modelHeight;
+        // 同步更新剖切面初始位置（滑动条100=底部，初始显示全部）
+        clipPlane.constant = 0;
       }
+
+      // 保存相机距离供视图切换使用
+      window.viewDistance = distance;
+    }
+
+    /**
+     * 切换到顶视图
+     */
+    function setTopView() {
+      if (!window.viewDistance) return;
+      const distance = window.viewDistance;
+      camera.position.set(0, distance, 0);
+      camera.up.set(0, 0, -1);  // 调整相机上方向
+      controls.target.set(0, modelHeight / 2, 0);  // 目标点为模型中心
+      controls.update();
+    }
+
+    /**
+     * 切换到轴测图
+     */
+    function setIsoView() {
+      if (!window.viewDistance) return;
+      const distance = window.viewDistance;
+      camera.position.set(distance, distance * 0.7, distance);
+      camera.up.set(0, 1, 0);  // 恢复相机上方向
+      controls.target.set(0, modelHeight / 2, 0);  // 目标点为模型中心
+      controls.update();
+    }
+
+    /**
+     * 切换到正视图
+     */
+    function setFrontView() {
+      if (!window.viewDistance) return;
+      const distance = window.viewDistance;
+      camera.position.set(0, distance * 0.7, distance);
+      camera.up.set(0, 1, 0);
+      controls.target.set(0, modelHeight / 2, 0);  // 目标点为模型中心
+      controls.update();
     }
 
     // 加载进度回调函数
@@ -570,11 +702,41 @@
       sidebar.classList.toggle('active');
     });
 
-    // 点击屏幕任意位置时隐藏菜单
+    // 点击屏幕任意位置时隐藏菜单、工具栏和视图按钮
     document.addEventListener('click', (e) => {
+      // 隐藏菜单
       if (!menuBtn.contains(e.target) && !sidebar.contains(e.target)) {
         sidebar.classList.remove('active');
       }
+      // 隐藏左上角工具栏
+      if (!logoEl.contains(e.target) && !toolbarEl.contains(e.target)) {
+        toolbarEl.style.display = 'none';
+      }
+      // 隐藏视图工具栏
+      if (!viewToolbar.contains(e.target) && !viewToolbarToggle.contains(e.target)) {
+        viewToolbarVisible = false;
+        viewToolbar.classList.remove('visible');
+        viewToolbarToggle.classList.remove('hidden');
+      }
+    });
+
+    // 视图切换按钮事件
+    const topViewBtn = document.getElementById('topViewBtn');
+    const isoViewBtn = document.getElementById('isoViewBtn');
+    const frontViewBtn = document.getElementById('frontViewBtn');
+
+    topViewBtn.addEventListener('click', setTopView);
+    isoViewBtn.addEventListener('click', setIsoView);
+    frontViewBtn.addEventListener('click', setFrontView);
+
+    // 视图工具栏显示/隐藏切换
+    const viewToolbar = document.getElementById('viewToolbar');
+    const viewToolbarToggle = document.getElementById('viewToolbarToggle');
+    let viewToolbarVisible = false;
+    viewToolbarToggle.addEventListener('click', () => {
+      viewToolbarVisible = !viewToolbarVisible;
+      viewToolbar.classList.toggle('visible', viewToolbarVisible);
+      viewToolbarToggle.classList.toggle('hidden', viewToolbarVisible);
     });
 
     // 边框开关事件
@@ -588,6 +750,7 @@
     // 阴影开关事件
     const shadowToggle = document.getElementById('shadowToggle');
     shadowToggle.addEventListener('change', (e) => {
+      renderer.shadowMap.enabled = e.target.checked;
       mainLight.castShadow = e.target.checked;
       if (currentModel) {
         currentModel.traverse(child => {
@@ -601,28 +764,40 @@
 
     // 剖切面开关事件
     const clipToggle = document.getElementById('clipToggle');
+    const clipToggleBar = document.getElementById('clipToggleBar');
     const clipSliderBar = document.getElementById('clipSliderBar');
     const clipSlider = document.getElementById('clipSlider');
     const clipValue = document.getElementById('clipValue');
 
     function updateClipPlane() {
       const value = parseFloat(clipSlider.value);
-      // 滑动条 0 = 底部，滑动条100 = 顶部(modelHeight)
-      // Plane: y + constant = 0，即 y = -constant
-      const targetY = (value / 100) * modelHeight;
+      // 对调：滑动条 0 = 顶部(modelHeight)，滑动条100 = 底部(0)
+      const targetY = ((100 - value) / 100) * modelHeight;
       clipPlane.constant = -targetY;
       clipValue.textContent = value.toFixed(1);
+      // 更新滑动条背景渐变
+      clipSlider.style.setProperty('--val', value + '%');
+      if (currentModel) {
+        enableClip(currentModel);
+      }
+    }
+
+    function handleClipToggle(enabled) {
+      clipEnabled = enabled;
+      clipSliderBar.classList.toggle('active', clipEnabled);
+      clipToggle.checked = enabled;
+      clipToggleBar.classList.toggle('active', enabled);
       if (currentModel) {
         enableClip(currentModel);
       }
     }
 
     clipToggle.addEventListener('change', (e) => {
-      clipEnabled = e.target.checked;
-      clipSliderBar.classList.toggle('active', clipEnabled);
-      if (currentModel) {
-        enableClip(currentModel);
-      }
+      handleClipToggle(e.target.checked);
+    });
+
+    clipToggleBar.addEventListener('click', () => {
+      handleClipToggle(!clipEnabled);
     });
 
     clipSlider.addEventListener('input', updateClipPlane);
