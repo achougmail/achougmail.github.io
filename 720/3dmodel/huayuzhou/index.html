@@ -106,6 +106,74 @@
   #sidebar input[type="checkbox"]:checked::before {
     transform: translateX(16px);
   }
+  #clipSliderBar button { 
+    width: 20px; height: 20px; border: none; border-radius: 4px;
+    background: rgba(255,255,255,0.1); color: #aaa; font-size: 14px;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s, color 0.2s;
+  }
+  /* #clipSliderBar button:hover { background: rgba(255,255,255,0.2); color: #fff; } */
+  #clipSliderBar button.active { background: rgba(255,255,255,0.2); color: #fff; }
+  #clipSliderBar button.active:hover { background: #2db84d; }
+  /* 左侧中间视图工具栏 */
+  #viewToolbar {
+    position: absolute; top: 50%; left: -36px; transform: translateY(-50%); z-index: 10;
+    display: flex; flex-direction: column; gap: 3px; align-items: center;
+    background: rgba(20, 20, 20, 0.75);
+    backdrop-filter: blur(6px);
+    padding: 4px 0;
+    border-radius: 0 8px 8px 0;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-left: none;
+    width: 36px;
+    box-sizing: border-box;
+    transition: left 0.5s ease;
+  }
+  #viewToolbar.visible {
+    left: 0;
+  }
+  #viewToolbar .view-icon {
+    width: 36px; height: 36px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+    color: #ccc;
+    font-weight: 300;
+  }
+  #viewToolbar .view-icon:hover {
+    color: #fff;
+  }
+  #viewToolbar .divider {
+    width: 12px;
+    height: 0.3px;
+    background: rgba(255, 255, 255, 0.3);
+  }
+  /* 视图工具栏调出标签 */
+  #viewToolbarToggle {
+    position: absolute; top: 50%; left: 0; transform: translateY(-50%); z-index: 11;
+    width: 20px;
+    height: 60px;
+    background: rgba(20, 20, 20, 0.75);
+    backdrop-filter: blur(6px);
+    border-radius: 0 6px 6px 0;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-left: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #aaa;
+    font-size: 12px;
+    writing-mode: vertical-rl;
+    transition: left 0.5s ease, background 0.2s;
+  }
+  #viewToolbarToggle:hover {
+    background: rgba(40, 40, 40, 0.85);
+    color: #fff;
+  }
+  #viewToolbarToggle.hidden {
+    left: 36px;
+  }
   /* Z轴剖切面滑动条容器 */
   #clipSliderBar {
     position: absolute; bottom: 90px; left: 50%; transform: translateX(-50%); z-index: 10;
@@ -120,7 +188,8 @@
   #clipSlider {
     -webkit-appearance: none; appearance: none;
     width: 200px; height: 6px;
-    background: #34C759; border-radius: 3px;
+    background: linear-gradient(to right, #34C759 var(--val, 100%), #39393D var(--val, 100%));
+    border-radius: 3px;
     outline: none;
   }
   #clipSlider::-webkit-slider-thumb {
@@ -153,10 +222,23 @@
     <svg viewBox="0 0 24 24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
   </div>
 
+  <!-- 左侧中间视图工具栏 -->
+  <div id="viewToolbar">
+    <div id="isoViewBtn" class="view-icon" title="侧视图">侧</div>
+    <div class="divider"></div>
+    <div id="frontViewBtn" class="view-icon" title="正视图">正</div>
+    <div class="divider"></div>
+    <div id="topViewBtn" class="view-icon" title="顶视图">顶</div>
+  </div>
+
+  <!-- 视图工具栏调出标签 -->
+  <div id="viewToolbarToggle">视图</div>
+
   <!-- 竖条工具栏（菜单面板） -->
   <div id="sidebar">
     <label><input type="checkbox" id="edgeToggle" checked />边线</label>
-    <label><input type="checkbox" id="shadowToggle" checked />阴影</label>
+    <label><input type="checkbox" id="shadowToggle" />阴影</label>
+    <label><input type="checkbox" id="gridToggle" checked />网格</label>
     <label><input type="checkbox" id="clipToggle" />剖切</label>
   </div>
 
@@ -171,9 +253,10 @@
 
   <!-- Z轴剖切面滑动条（默认隐藏） -->
   <div id="clipSliderBar">
-    <span id="clipLabel">高度剖切面</span>
+    <span id="clipLabel">剖切面</span>
     <input type="range" id="clipSlider" min="0" max="100" value="100" step="0.1" />
     <span id="clipValue">100</span>
+    <button id="clipToggleBar">×</button>
   </div>
 
   <!-- 底部操作提示 -->
@@ -213,22 +296,23 @@
     import { PLYLoader } from 'three/addons/loaders/PLYLoader.js';
 
     // 获取DOM元素
-    const container = document.getElementById('container');
-    const loadingEl = document.getElementById('loading');
-    const loadingText = document.getElementById('loading-text');
-    const loadingSub = document.getElementById('loading-sub');
-    const progressFill = document.getElementById('progress-fill');
-    const errorEl = document.getElementById('error');
-    const fileInput = document.getElementById('fileInput');
+    var container = document.getElementById('container');
+    var loadingEl = document.getElementById('loading');
+    var loadingText = document.getElementById('loading-text');
+    var loadingSub = document.getElementById('loading-sub');
+    var progressFill = document.getElementById('progress-fill');
+    var errorEl = document.getElementById('error');
+    var fileInput = document.getElementById('fileInput');
 
     // 全局变量：场景、相机、渲染器、控制器、当前模型、动画ID、边线数组、主光源
-    let scene, camera, renderer, controls, currentModel, mainLight;
-    let animationId;
-    const edgeLines = [];
+    var scene, camera, renderer, controls, currentModel, mainLight;
+    var animationId;
+    var edgeLines = [];
     // 剖切面相关
-    let clipPlane;
-    let clipEnabled = false;
-    let modelHeight = 100;  // 模型高度，用于剖切面范围计算
+    var clipPlane;
+    var clipEnabled = false;
+    var modelHeight = 100;  // 模型高度，用于剖切面范围计算
+    var grid;  // 地面网格
 
     // 显示加载遮罩
     function showLoading(text, sub) {
@@ -246,6 +330,21 @@
 
     // 显示错误信息
     function showError(msg) { errorEl.style.display = 'block'; errorEl.textContent = msg; }
+
+    // 兼容性：classList.toggle(className, force) 的polyfill
+    function toggleClass(el, className, force) {
+      if (force === undefined) {
+        if (el.classList.contains(className)) {
+          el.classList.remove(className);
+        } else {
+          el.classList.add(className);
+        }
+      } else if (force) {
+        el.classList.add(className);
+      } else {
+        el.classList.remove(className);
+      }
+    }
 
     /**
      * 初始化3D场景
@@ -272,7 +371,7 @@
       renderer.outputColorSpace = THREE.SRGBColorSpace;
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
       renderer.toneMappingExposure = 1.5;
-      renderer.shadowMap.enabled = true;
+      renderer.shadowMap.enabled = false;
       renderer.shadowMap.type = THREE.PCFSoftShadowMap;
       renderer.localClippingEnabled = true;
       container.appendChild(renderer.domElement);
@@ -286,7 +385,7 @@
       // 添加主方向光
       mainLight = new THREE.DirectionalLight(0xedfaff, 1.3);
       mainLight.position.set(50, 80, 50);
-      mainLight.castShadow = true;
+      mainLight.castShadow = false;
       mainLight.shadow.mapSize.width = 2048;
       mainLight.shadow.mapSize.height = 2048;
       mainLight.shadow.camera.near = 0.1;
@@ -300,6 +399,14 @@
       const dir2 = new THREE.DirectionalLight(0xffffff, 0.6);
       dir2.position.set(-50, 30, -50);
       scene.add(dir2);
+
+      // 添加地面网格
+      const gridSize = Math.max(modelHeight, 200);
+      grid = new THREE.GridHelper(gridSize, gridSize / 5, 0x808080, 0xcccccc);
+      grid.position.y = 0;  // 网格在模型底部（Y=0）
+      grid.material.opacity = 0.5;
+      grid.material.transparent = true;
+      scene.add(grid);
 
       // 初始化轨道控制器（鼠标交互）
       controls = new OrbitControls(camera, renderer.domElement);
@@ -337,11 +444,11 @@
     function clearCurrentModel() {
       if (!currentModel) return;
       scene.remove(currentModel);
-      currentModel.traverse(obj => {
+      currentModel.traverse(function(obj) {
         if (obj.geometry) obj.geometry.dispose();
         if (obj.material) {
-          const mats = Array.isArray(obj.material) ? obj.material : [obj.material];
-          mats.forEach(m => m && m.dispose());
+          var mats = Array.isArray(obj.material) ? obj.material : [obj.material];
+          mats.forEach(function(m) { if (m) m.dispose(); });
         }
       });
       currentModel = null;
@@ -355,19 +462,21 @@
      * - 设置相机裁剪平面
      */
     function frameAndCenter(object) {
-      const box = new THREE.Box3().setFromObject(object);
+      var box = new THREE.Box3().setFromObject(object);
       if (box.isEmpty()) return;
-      const size = box.getSize(new THREE.Vector3());
-      const center = box.getCenter(new THREE.Vector3());
+      var size = box.getSize(new THREE.Vector3());
+      var center = box.getCenter(new THREE.Vector3());
 
-      // 将模型中心移到原点
-      object.position.sub(center);
+      // 将模型底部移到 Y=0 位置
+      object.position.x = -center.x;
+      object.position.y = -box.min.y;  // 底部在 Y=0
+      object.position.z = -center.z;
 
       // 计算模型最大尺寸
-      const maxDim = Math.max(size.x, size.y, size.z);
-      const fov = camera.fov * (Math.PI / 180);
+      var maxDim = Math.max(size.x, size.y, size.z);
+      var fov = camera.fov * (Math.PI / 180);
       // 计算相机距离，使模型占屏幕50%
-      const distance = Math.abs(maxDim / 2 / Math.tan(fov / 2)) * 0.8;
+      var distance = Math.abs(maxDim / 2 / Math.tan(fov / 2)) * 0.5;
 
       // 设置相机位置
       camera.position.set(distance, distance * 0.7, distance);
@@ -375,9 +484,9 @@
       camera.far = maxDim * 100;
       camera.updateProjectionMatrix();
 
-      // 设置控制器目标点和最大距离
-      controls.target.set(0, 0, 0);
-      controls.maxDistance = maxDim * 1.0;  // 最大距离为模型最大尺寸的1倍
+      // 设置控制器目标点为模型中心位置（Y=modelHeight/2）
+      controls.target.set(0, size.y / 2, 0);
+      controls.maxDistance = maxDim * 2.0;  // 最大距离为模型最大尺寸的1倍
       controls.minDistance = distance / 5;  // 放大不超过4.5倍
       controls.maxPolarAngle = Math.PI / 2;  // 限制垂直翻转角度不超过90度，确实在水平线之上
       controls.update();
@@ -390,26 +499,85 @@
         clipSlider.min = 0;
         clipSlider.max = 100;
         clipSlider.value = 100;
+        clipSlider.style.setProperty('--val', '100%');
         document.getElementById('clipValue').textContent = '100';
-        // 同步更新剖切面初始位置
-        clipPlane.constant = -modelHeight;
+        // 同步更新剖切面初始位置（滑动条100=底部，初始显示全部）
+        clipPlane.constant = 0;
       }
+
+      // 保存相机距离供视图切换使用
+      window.viewDistance = distance;
+    }
+
+    /**
+     * 根据屏幕尺寸计算合适的相机距离
+     */
+    function calculateDistance() {
+      if (!currentModel) return window.viewDistance || 10;
+      var box = new THREE.Box3().setFromObject(currentModel);
+      if (box.isEmpty()) return window.viewDistance || 10;
+      var size = box.getSize(new THREE.Vector3());
+      var maxDim = Math.max(size.x, size.y, size.z);
+      var fov = camera.fov * (Math.PI / 180);
+      // 考虑屏幕宽高比，确保模型在任何屏幕尺寸下都能完整显示
+      var aspect = window.innerWidth / window.innerHeight;
+      var distance = Math.abs(maxDim / 2 / Math.tan(fov / 2)) * 0.5;
+      // 根据宽屏或竖屏调整距离
+      if (aspect > 1.5) {
+        distance *= 1;  // 宽屏时适当缩小距离
+      } else if (aspect < 1) {
+        distance *= 3;  // 竖屏时适当增大距离
+      }
+      return distance;
+    }
+
+    /**
+     * 切换到顶视图
+     */
+    function setTopView() {
+      var distance = calculateDistance();
+      camera.position.set(0, distance, 0);
+      camera.up.set(0, 0, -1);  // 调整相机上方向
+      controls.target.set(0, modelHeight / 2, 0);  // 目标点为模型中心
+      controls.update();
+    }
+
+    /**
+     * 切换到轴测图
+     */
+    function setIsoView() {
+      var distance = calculateDistance();
+      camera.position.set(distance, distance * 0.7, distance);
+      camera.up.set(0, 1, 0);  // 恢复相机上方向
+      controls.target.set(0, modelHeight / 2, 0);  // 目标点为模型中心
+      controls.update();
+    }
+
+    /**
+     * 切换到正视图
+     */
+    function setFrontView() {
+      var distance = calculateDistance();
+      camera.position.set(0, distance * 0.7, distance);
+      camera.up.set(0, 1, 0);
+      controls.target.set(0, modelHeight / 2, 0);  // 目标点为模型中心
+      controls.update();
     }
 
     // 加载进度回调函数
     function onProgress(xhr) {
       if (xhr.lengthComputable) {
-        const pct = (xhr.loaded / xhr.total) * 100;
+        var pct = (xhr.loaded / xhr.total) * 100;
         updateProgress(pct);
-        loadingSub.textContent = `${(xhr.loaded / 1024 / 1024).toFixed(2)} MB / ${(xhr.total / 1024 / 1024).toFixed(2)} MB (${pct.toFixed(0)}%)`;
+        loadingSub.textContent = (xhr.loaded / 1024 / 1024).toFixed(2) + ' MB / ' + (xhr.total / 1024 / 1024).toFixed(2) + ' MB (' + pct.toFixed(0) + '%)';
       } else {
-        loadingSub.textContent = `${(xhr.loaded / 1024 / 1024).toFixed(2)} MB 已加载`;
+        loadingSub.textContent = (xhr.loaded / 1024 / 1024).toFixed(2) + ' MB 已加载';
       }
     }
 
     // 根据URL检测模型格式
     function detectFormat(url) {
-      const u = url.split('?')[0].toLowerCase();
+      var u = url.split('?')[0].toLowerCase();
       if (u.endsWith('.glb') || u.endsWith('.gltf')) return 'glb';
       if (u.endsWith('.obj')) return 'obj';
       if (u.endsWith('.ply')) return 'ply';
@@ -418,10 +586,10 @@
 
     // 为模型材质启用剖切面
     function enableClip(object) {
-      object.traverse(child => {
+      object.traverse(function(child) {
         if (child.isMesh && child.material) {
-          const materials = Array.isArray(child.material) ? child.material : [child.material];
-          materials.forEach(m => {
+          var materials = Array.isArray(child.material) ? child.material : [child.material];
+          materials.forEach(function(m) {
             m.clippingPlanes = clipEnabled ? [clipPlane] : [];
           });
         }
@@ -438,15 +606,15 @@
       errorEl.style.display = 'none';
       showLoading('加载中，请稍候…', fallbackName || url);
 
-      const format = detectFormat(url);
+      var format = detectFormat(url);
 
       // 为模型添加边线效果
       function addEdges(object) {
         edgeLines.length = 0;
-        object.traverse(child => {
+        object.traverse(function(child) {
           if (child.isMesh) {
-            const edges = new THREE.EdgesGeometry(child.geometry, 15);
-            const line = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.5 }));
+            var edges = new THREE.EdgesGeometry(child.geometry, 15);
+            var line = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.5 }));
             child.add(line);
             edgeLines.push(line);
           }
@@ -455,10 +623,10 @@
 
       // 将模型材质改为亚光效果
       function makeMatte(object) {
-        object.traverse(child => {
+        object.traverse(function(child) {
           if (child.isMesh && child.material) {
-            const materials = Array.isArray(child.material) ? child.material : [child.material];
-            materials.forEach(m => {
+            var materials = Array.isArray(child.material) ? child.material : [child.material];
+            materials.forEach(function(m) {
               if (m.isMeshStandardMaterial || m.isMeshPhysicalMaterial) {
                 m.roughness = 0.95;
                 m.metalness = 0;
@@ -470,7 +638,7 @@
 
       // 为模型启用阴影
       function enableShadow(object) {
-        object.traverse(child => {
+        object.traverse(function(child) {
           if (child.isMesh) {
             child.castShadow = true;
             child.receiveShadow = true;
@@ -479,7 +647,7 @@
       }
 
       // 模型加载成功回调
-      const onLoadModel = (object) => {
+      function onLoadModel(object) {
         currentModel = object;
         makeMatte(object);
         enableShadow(object);
@@ -489,14 +657,14 @@
         frameAndCenter(object);
         toolbarEl.style.display = 'none';
         hideLoading();
-      };
+      }
 
       // 模型加载失败回调
-      const onError = (err) => {
+      function onError(err) {
         console.error(err);
         hideLoading();
         showError('模型加载失败：' + (err && err.message ? err.message : '请检查文件路径或格式。'));
-      };
+      }
 
       try {
         if (format === 'glb') {
@@ -539,58 +707,89 @@
     // 从文件对象加载模型
     function loadFromFile(file) {
       if (!file) return;
-      const url = URL.createObjectURL(file);
-      const fakeUrl = url + '#' + file.name;
+      var url = URL.createObjectURL(file);
+      var fakeUrl = url + '#' + file.name;
       loadFromURL(fakeUrl, file.name);
     }
 
     // 文件选择器change事件
-    fileInput.addEventListener('change', (e) => {
-      const file = e.target.files && e.target.files[0];
+    fileInput.addEventListener('change', function(e) {
+      var file = e.target.files && e.target.files[0];
       if (file) loadFromFile(file);
     });
 
     // 点击logo切换工具栏显示/隐藏
-    const logoEl = document.getElementById('logo');
-    const toolbarEl = document.getElementById('toolbar');
-    logoEl.addEventListener('click', () => {
+    var logoEl = document.getElementById('logo');
+    var toolbarEl = document.getElementById('toolbar');
+    logoEl.addEventListener('click', function() {
       toolbarEl.style.display = toolbarEl.style.display === 'flex' ? 'none' : 'flex';
     });
 
     // 工具栏关闭按钮事件
-    const toolbarClose = document.getElementById('toolbarClose');
-    toolbarClose.addEventListener('click', () => {
+    var toolbarClose = document.getElementById('toolbarClose');
+    toolbarClose.addEventListener('click', function() {
       toolbarEl.style.display = 'none';
     });
 
     // 底部菜单按钮事件
-    const menuBtn = document.getElementById('menuBtn');
-    const sidebar = document.getElementById('sidebar');
-    menuBtn.addEventListener('click', () => {
-      sidebar.classList.toggle('active');
+    var menuBtn = document.getElementById('menuBtn');
+    var sidebar = document.getElementById('sidebar');
+    menuBtn.addEventListener('click', function() {
+      toggleClass(sidebar, 'active');
     });
 
-    // 点击屏幕任意位置时隐藏菜单
-    document.addEventListener('click', (e) => {
+    // 点击屏幕任意位置时隐藏菜单、工具栏和视图按钮
+    document.addEventListener('click', function(e) {
+      // 隐藏菜单
       if (!menuBtn.contains(e.target) && !sidebar.contains(e.target)) {
         sidebar.classList.remove('active');
       }
+      // 隐藏左上角工具栏
+      if (!logoEl.contains(e.target) && !toolbarEl.contains(e.target)) {
+        toolbarEl.style.display = 'none';
+      }
+      // 隐藏视图工具栏
+      if (!viewToolbar.contains(e.target) && !viewToolbarToggle.contains(e.target)) {
+        viewToolbarVisible = false;
+        viewToolbar.classList.remove('visible');
+        viewToolbarToggle.classList.remove('hidden');
+      }
+    });
+
+    // 视图切换按钮事件
+    var topViewBtn = document.getElementById('topViewBtn');
+    var isoViewBtn = document.getElementById('isoViewBtn');
+    var frontViewBtn = document.getElementById('frontViewBtn');
+
+    topViewBtn.addEventListener('click', setTopView);
+    isoViewBtn.addEventListener('click', setIsoView);
+    frontViewBtn.addEventListener('click', setFrontView);
+
+    // 视图工具栏显示/隐藏切换
+    var viewToolbar = document.getElementById('viewToolbar');
+    var viewToolbarToggle = document.getElementById('viewToolbarToggle');
+    var viewToolbarVisible = false;
+    viewToolbarToggle.addEventListener('click', function() {
+      viewToolbarVisible = !viewToolbarVisible;
+      toggleClass(viewToolbar, 'visible', viewToolbarVisible);
+      toggleClass(viewToolbarToggle, 'hidden', viewToolbarVisible);
     });
 
     // 边框开关事件
-    const edgeToggle = document.getElementById('edgeToggle');
-    edgeToggle.addEventListener('change', (e) => {
-      edgeLines.forEach(line => {
+    var edgeToggle = document.getElementById('edgeToggle');
+    edgeToggle.addEventListener('change', function(e) {
+      edgeLines.forEach(function(line) {
         line.visible = e.target.checked;
       });
     });
 
     // 阴影开关事件
-    const shadowToggle = document.getElementById('shadowToggle');
-    shadowToggle.addEventListener('change', (e) => {
+    var shadowToggle = document.getElementById('shadowToggle');
+    shadowToggle.addEventListener('change', function(e) {
+      renderer.shadowMap.enabled = e.target.checked;
       mainLight.castShadow = e.target.checked;
       if (currentModel) {
-        currentModel.traverse(child => {
+        currentModel.traverse(function(child) {
           if (child.isMesh) {
             child.castShadow = e.target.checked;
             child.receiveShadow = e.target.checked;
@@ -599,30 +798,50 @@
       }
     });
 
+    // 网格开关事件
+    var gridToggle = document.getElementById('gridToggle');
+    gridToggle.addEventListener('change', function(e) {
+      if (grid) {
+        grid.visible = e.target.checked;
+      }
+    });
+
     // 剖切面开关事件
-    const clipToggle = document.getElementById('clipToggle');
-    const clipSliderBar = document.getElementById('clipSliderBar');
-    const clipSlider = document.getElementById('clipSlider');
-    const clipValue = document.getElementById('clipValue');
+    var clipToggle = document.getElementById('clipToggle');
+    var clipToggleBar = document.getElementById('clipToggleBar');
+    var clipSliderBar = document.getElementById('clipSliderBar');
+    var clipSlider = document.getElementById('clipSlider');
+    var clipValue = document.getElementById('clipValue');
 
     function updateClipPlane() {
-      const value = parseFloat(clipSlider.value);
-      // 滑动条 0 = 底部，滑动条100 = 顶部(modelHeight)
-      // Plane: y + constant = 0，即 y = -constant
-      const targetY = (value / 100) * modelHeight;
+      var value = parseFloat(clipSlider.value);
+      // 对调：滑动条 0 = 顶部(modelHeight)，滑动条100 = 底部(0)
+      var targetY = ((100 - value) / 100) * modelHeight;
       clipPlane.constant = -targetY;
       clipValue.textContent = value.toFixed(1);
+      // 更新滑动条背景渐变
+      clipSlider.style.setProperty('--val', value + '%');
       if (currentModel) {
         enableClip(currentModel);
       }
     }
 
-    clipToggle.addEventListener('change', (e) => {
-      clipEnabled = e.target.checked;
-      clipSliderBar.classList.toggle('active', clipEnabled);
+    function handleClipToggle(enabled) {
+      clipEnabled = enabled;
+      toggleClass(clipSliderBar, 'active', clipEnabled);
+      clipToggle.checked = enabled;
+      toggleClass(clipToggleBar, 'active', enabled);
       if (currentModel) {
         enableClip(currentModel);
       }
+    }
+
+    clipToggle.addEventListener('change', function(e) {
+      handleClipToggle(e.target.checked);
+    });
+
+    clipToggleBar.addEventListener('click', function() {
+      handleClipToggle(!clipEnabled);
     });
 
     clipSlider.addEventListener('input', updateClipPlane);
