@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
 <title>房产实勘员VR - 3D模型浏览器</title>
 <style>
   /* 全局样式重置 */
@@ -108,12 +108,12 @@
   }
   #clipSliderBar button { 
     width: 20px; height: 20px; border: none; border-radius: 4px;
-    background: rgba(255,255,255,0.1); color: #aaa; font-size: 14px;
+    background: #666; color: #ccc; font-size: 14px;
     cursor: pointer; display: flex; align-items: center; justify-content: center;
     transition: background 0.2s, color 0.2s;
   }
-  /* #clipSliderBar button:hover { background: rgba(255,255,255,0.2); color: #fff; } */
-  #clipSliderBar button.active { background: rgba(255,255,255,0.2); color: #fff; }
+  #clipSliderBar button:hover { background: #555; color: #fff; }
+  #clipSliderBar button.active { background: #34C759; color: #fff; }
   #clipSliderBar button.active:hover { background: #2db84d; }
   /* 左侧中间视图工具栏 */
   #viewToolbar {
@@ -239,6 +239,7 @@
     <label><input type="checkbox" id="edgeToggle" checked />边线</label>
     <label><input type="checkbox" id="shadowToggle" />阴影</label>
     <label><input type="checkbox" id="gridToggle" checked />网格</label>
+    <label><input type="checkbox" id="perspectiveToggle" checked />透视</label>
     <label><input type="checkbox" id="clipToggle" />剖切</label>
   </div>
 
@@ -253,9 +254,9 @@
 
   <!-- Z轴剖切面滑动条（默认隐藏） -->
   <div id="clipSliderBar">
-    <span id="clipLabel">剖切面</span>
-    <input type="range" id="clipSlider" min="0" max="100" value="100" step="0.1" />
-    <span id="clipValue">100</span>
+    <span id="clipLabel">剖切</span>
+    <input type="range" id="clipSlider" min="0" max="100" value="0" step="0.1" />
+    <button id="edgeToggleBar" title="显示/隐藏边线">L</button>
     <button id="clipToggleBar">×</button>
   </div>
 
@@ -376,8 +377,8 @@
       renderer.localClippingEnabled = true;
       container.appendChild(renderer.domElement);
 
-      // 初始化Y轴剖切面（默认不激活，值为modelHeight表示在顶部）
-      clipPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), -modelHeight);
+      // 初始化Y轴剖切面（默认不激活，保留剖切面下方到模型底部的部分）
+      clipPlane = new THREE.Plane(new THREE.Vector3(0, -1, 0), modelHeight);
 
       // 添加半球光（环境光）
       const hemi = new THREE.HemisphereLight(0xffffff, 0x909090, 1.0);
@@ -415,6 +416,17 @@
       controls.screenSpacePanning = true;  // 允许屏幕空间平移
       controls.zoomSpeed = 1;  // 反转滚轮缩放方向
 
+      // 监听拖动开始事件，顶视图时拖动开始切换相机方向为(0,1,0)
+      controls.addEventListener('start', function() {
+        // 检查是否处于顶视图（相机位置接近Y轴正方向）
+        if (Math.abs(camera.position.x) < 1 && Math.abs(camera.position.z) < 1 && camera.position.y > 0) {
+          // 检查当前相机up方向是否为顶视图模式
+          if (Math.abs(camera.up.y) < 0.5) {
+            camera.up.set(0, 1, 0);
+          }
+        }
+      });
+
       // 监听窗口大小变化
       window.addEventListener('resize', onResize);
 
@@ -424,6 +436,9 @@
 
     // 窗口大小变化时调整相机和渲染器
     function onResize() {
+      // 更新正交相机视口范围，保持模型比例
+      updateOrthoCamera(camera);
+      
       camera.aspect = container.clientWidth / container.clientHeight;
       camera.updateProjectionMatrix();
       renderer.setSize(container.clientWidth, container.clientHeight);
@@ -498,15 +513,32 @@
       if (clipSlider) {
         clipSlider.min = 0;
         clipSlider.max = 100;
-        clipSlider.value = 100;
-        clipSlider.style.setProperty('--val', '100%');
-        document.getElementById('clipValue').textContent = '100';
-        // 同步更新剖切面初始位置（滑动条100=底部，初始显示全部）
-        clipPlane.constant = 0;
+        clipSlider.value = 0;
+        clipSlider.style.setProperty('--val', '0%');
+        // 同步更新剖切面初始位置（滑动条0=顶部，初始显示全部）
+        clipPlane.constant = modelHeight;
       }
 
       // 保存相机距离供视图切换使用
       window.viewDistance = distance;
+    }
+
+    /**
+     * 更新正交相机的视口范围
+     */
+    function updateOrthoCamera(camera) {
+      if (!camera.isOrthographicCamera || !currentModel) return;
+      var box = new THREE.Box3().setFromObject(currentModel);
+      if (box.isEmpty()) return;
+      var size = box.getSize(new THREE.Vector3());
+      var maxDim = Math.max(size.x, size.y, size.z);
+      var aspect = window.innerWidth / window.innerHeight;
+      var zoom = 0.8;
+      camera.left = -maxDim * aspect * zoom;
+      camera.right = maxDim * aspect * zoom;
+      camera.top = maxDim * zoom;
+      camera.bottom = -maxDim * zoom;
+      camera.updateProjectionMatrix();
     }
 
     /**
@@ -518,6 +550,12 @@
       if (box.isEmpty()) return window.viewDistance || 10;
       var size = box.getSize(new THREE.Vector3());
       var maxDim = Math.max(size.x, size.y, size.z);
+      
+      // 如果是正交相机，返回模型最大尺寸的2倍作为距离参考
+      if (camera.isOrthographicCamera) {
+        return maxDim * 2;
+      }
+      
       var fov = camera.fov * (Math.PI / 180);
       // 考虑屏幕宽高比，确保模型在任何屏幕尺寸下都能完整显示
       var aspect = window.innerWidth / window.innerHeight;
@@ -526,7 +564,7 @@
       if (aspect > 1.5) {
         distance *= 1;  // 宽屏时适当缩小距离
       } else if (aspect < 1) {
-        distance *= 3;  // 竖屏时适当增大距离
+        distance *= 3.0;  // 竖屏时适当增大距离
       }
       return distance;
     }
@@ -535,6 +573,7 @@
      * 切换到顶视图
      */
     function setTopView() {
+      updateOrthoCamera(camera);
       var distance = calculateDistance();
       camera.position.set(0, distance, 0);
       camera.up.set(0, 0, -1);  // 调整相机上方向
@@ -546,6 +585,7 @@
      * 切换到轴测图
      */
     function setIsoView() {
+      updateOrthoCamera(camera);
       var distance = calculateDistance();
       camera.position.set(distance, distance * 0.7, distance);
       camera.up.set(0, 1, 0);  // 恢复相机上方向
@@ -557,6 +597,7 @@
      * 切换到正视图
      */
     function setFrontView() {
+      updateOrthoCamera(camera);
       var distance = calculateDistance();
       camera.position.set(0, distance * 0.7, distance);
       camera.up.set(0, 1, 0);
@@ -628,8 +669,8 @@
             var materials = Array.isArray(child.material) ? child.material : [child.material];
             materials.forEach(function(m) {
               if (m.isMeshStandardMaterial || m.isMeshPhysicalMaterial) {
-                m.roughness = 0.95;
-                m.metalness = 0;
+                m.roughness = 0.95; // 亚光效果参数，0-1 之间，0 为平滑，1 为粗糙
+                m.metalness = 0; // 金属感参数，0 为绝缘体，1 为纯金属
               }
             });
           }
@@ -657,6 +698,12 @@
         frameAndCenter(object);
         toolbarEl.style.display = 'none';
         hideLoading();
+        
+        // 初始化剖切工具栏中的边线按钮样式
+        var edgeToggleBar = document.getElementById('edgeToggleBar');
+        if (edgeToggleBar) {
+          toggleClass(edgeToggleBar, 'active', edgeToggle.checked);
+        }
       }
 
       // 模型加载失败回调
@@ -781,6 +828,22 @@
       edgeLines.forEach(function(line) {
         line.visible = e.target.checked;
       });
+      // 同步更新剖切工具栏中的边线按钮样式
+      var edgeToggleBar = document.getElementById('edgeToggleBar');
+      if (edgeToggleBar) {
+        toggleClass(edgeToggleBar, 'active', e.target.checked);
+      }
+    });
+
+    // 剖切面工具栏中的边线切换按钮
+    var edgeToggleBar = document.getElementById('edgeToggleBar');
+    edgeToggleBar.addEventListener('click', function() {
+      // 切换边线开关状态
+      edgeToggle.checked = !edgeToggle.checked;
+      // 触发边线开关的change事件
+      edgeToggle.dispatchEvent(new Event('change'));
+      // 更新按钮样式
+      toggleClass(edgeToggleBar, 'active', edgeToggle.checked);
     });
 
     // 阴影开关事件
@@ -806,19 +869,44 @@
       }
     });
 
+    // 透视/正交切换开关事件
+    var perspectiveToggle = document.getElementById('perspectiveToggle');
+    perspectiveToggle.addEventListener('change', function(e) {
+      if (e.target.checked) {
+        // 切换到透视模式
+        const perspCamera = new THREE.PerspectiveCamera(60, container.clientWidth / container.clientHeight, 0.1, 5000);
+        perspCamera.position.copy(camera.position);
+        perspCamera.up.copy(camera.up);
+        perspCamera.lookAt(controls.target);
+        camera = perspCamera;
+        controls.object = camera;
+      } else {
+        // 切换到正交模式
+        const box = new THREE.Box3().setFromObject(currentModel || scene);
+        const size = box.getSize(new THREE.Vector3());
+        const maxDim = Math.max(size.x, size.y, size.z);
+        const aspect = container.clientWidth / container.clientHeight;
+        const orthoCamera = new THREE.OrthographicCamera(-maxDim * aspect, maxDim * aspect, maxDim, -maxDim, 0.1, 5000);
+        orthoCamera.position.copy(camera.position);
+        orthoCamera.up.copy(camera.up);
+        orthoCamera.lookAt(controls.target);
+        camera = orthoCamera;
+        controls.object = camera;
+      }
+      controls.update();
+    });
+
     // 剖切面开关事件
     var clipToggle = document.getElementById('clipToggle');
     var clipToggleBar = document.getElementById('clipToggleBar');
     var clipSliderBar = document.getElementById('clipSliderBar');
     var clipSlider = document.getElementById('clipSlider');
-    var clipValue = document.getElementById('clipValue');
 
     function updateClipPlane() {
       var value = parseFloat(clipSlider.value);
-      // 对调：滑动条 0 = 顶部(modelHeight)，滑动条100 = 底部(0)
-      var targetY = ((100 - value) / 100) * modelHeight;
-      clipPlane.constant = -targetY;
-      clipValue.textContent = value.toFixed(1);
+      // 滑动条 0 = 顶部(modelHeight)显示全部，滑动条100 = 底部(0)只显示底部
+      var targetY = (value / 100) * modelHeight;
+      clipPlane.constant = modelHeight - targetY;
       // 更新滑动条背景渐变
       clipSlider.style.setProperty('--val', value + '%');
       if (currentModel) {
