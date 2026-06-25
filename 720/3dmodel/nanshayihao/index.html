@@ -932,6 +932,11 @@
       var clipSliderBar = document.getElementById('clipSliderBar');
       if (clipSliderBar) clipSliderBar.classList.remove('active');
 
+      // 重置相机方向为(0,1,0)
+      if (camera) {
+        camera.up.set(0, 1, 0);
+      }
+
       // 重新加载模型
       loadFromURL('model.glb');
     });
