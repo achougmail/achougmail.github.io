@@ -221,7 +221,7 @@
 
   <!-- 左上角Logo -->
   <div id="logo">
-    <img src="../common/images/logo.png" alt="logo" />
+    <img src="../../../common/images/logo.png" alt="logo" />
   </div>
 
   <!-- 底部菜单按钮 -->
@@ -409,10 +409,10 @@
       mainLight.shadow.mapSize.height = 1024;
       mainLight.shadow.camera.near = 0.1;
       mainLight.shadow.camera.far = 6000;
-      mainLight.shadow.camera.left = -200;
-      mainLight.shadow.camera.right = 200;
-      mainLight.shadow.camera.top = 200;
-      mainLight.shadow.camera.bottom = -200;
+      mainLight.shadow.camera.left = -500;
+      mainLight.shadow.camera.right = 500;
+      mainLight.shadow.camera.top = 500;
+      mainLight.shadow.camera.bottom = -500;
       scene.add(mainLight);
       // 添加辅助方向光
       const dir2 = new THREE.DirectionalLight(0xffddaa, 0.6);
