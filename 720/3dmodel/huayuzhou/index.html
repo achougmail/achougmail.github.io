@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 <title>房产实勘员VR - 3D模型浏览器</title>
 <style>
   /* 全局样式重置 */
@@ -143,6 +143,13 @@
   #viewToolbar .view-icon:hover {
     color: #fff;
   }
+  #viewToolbar .view-icon.reload {
+    font-size: 18px;
+    transition: transform 0.3s ease;
+  }
+  #viewToolbar .view-icon.reload:hover {
+    transform: rotate(360deg);
+  }
   #viewToolbar .divider {
     width: 12px;
     height: 0.3px;
@@ -214,7 +221,7 @@
 
   <!-- 左上角Logo -->
   <div id="logo">
-    <img src="../common/images/logo.png" alt="Logo" />
+    <img src="../common/images/logo.png" alt="logo" />
   </div>
 
   <!-- 底部菜单按钮 -->
@@ -224,6 +231,8 @@
 
   <!-- 左侧中间视图工具栏 -->
   <div id="viewToolbar">
+    <div id="reloadBtn" class="view-icon reload" title="重载模型">↻</div>
+    <div class="divider"></div>
     <div id="isoViewBtn" class="view-icon" title="侧视图">侧</div>
     <div class="divider"></div>
     <div id="frontViewBtn" class="view-icon" title="正视图">正</div>
@@ -239,6 +248,7 @@
     <label><input type="checkbox" id="edgeToggle" checked />边线</label>
     <label><input type="checkbox" id="shadowToggle" />阴影</label>
     <label><input type="checkbox" id="gridToggle" checked />网格</label>
+    <label><input type="checkbox" id="axisToggle" checked />坐标</label>
     <label><input type="checkbox" id="perspectiveToggle" checked />透视</label>
     <label><input type="checkbox" id="clipToggle" />剖切</label>
   </div>
@@ -314,6 +324,7 @@
     var clipEnabled = false;
     var modelHeight = 100;  // 模型高度，用于剖切面范围计算
     var grid;  // 地面网格
+    var axisHelper;  // 坐标轴
 
     // 显示加载遮罩
     function showLoading(text, sub) {
@@ -366,8 +377,14 @@
       camera.position.set(10, 10, 10);
 
       // 创建WebGL渲染器
-      renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
-      renderer.setPixelRatio(window.devicePixelRatio);
+      renderer = new THREE.WebGLRenderer({
+        antialias: true,
+        powerPreference: 'high-performance',
+        alpha: false,
+        stencil: false
+      });
+      // 限制像素比，避免在高DPI设备上过热
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
       renderer.setSize(container.clientWidth, container.clientHeight);
       renderer.outputColorSpace = THREE.SRGBColorSpace;
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -387,17 +404,18 @@
       mainLight = new THREE.DirectionalLight(0xedfaff, 1.3);
       mainLight.position.set(50, 80, 50);
       mainLight.castShadow = false;
-      mainLight.shadow.mapSize.width = 2048;
-      mainLight.shadow.mapSize.height = 2048;
+      // 降低阴影贴图尺寸以提升性能
+      mainLight.shadow.mapSize.width = 1024;
+      mainLight.shadow.mapSize.height = 1024;
       mainLight.shadow.camera.near = 0.1;
-      mainLight.shadow.camera.far = 5000;
+      mainLight.shadow.camera.far = 6000;
       mainLight.shadow.camera.left = -200;
       mainLight.shadow.camera.right = 200;
       mainLight.shadow.camera.top = 200;
       mainLight.shadow.camera.bottom = -200;
       scene.add(mainLight);
       // 添加辅助方向光
-      const dir2 = new THREE.DirectionalLight(0xffffff, 0.6);
+      const dir2 = new THREE.DirectionalLight(0xffddaa, 0.6);
       dir2.position.set(-50, 30, -50);
       scene.add(dir2);
 
@@ -408,6 +426,12 @@
       grid.material.opacity = 0.5;
       grid.material.transparent = true;
       scene.add(grid);
+
+      // 添加坐标轴
+      const axisSize = Math.max(modelHeight, 200) / 2;
+      axisHelper = new THREE.AxesHelper(axisSize);
+      axisHelper.position.y = 0.01;  // 稍微抬高避免z-fighting
+      scene.add(axisHelper);
 
       // 初始化轨道控制器（鼠标交互）
       controls = new OrbitControls(camera, renderer.domElement);
@@ -445,10 +469,21 @@
     }
 
     // 渲染循环
+    var lastRenderTime = 0;
+    var minRenderInterval = 16; // 约60fps，限制最大帧率
+
     function animate() {
       animationId = requestAnimationFrame(animate);
-      controls.update();  // 更新控制器状态
-      renderer.render(scene, camera);
+
+      var now = performance.now();
+      var delta = now - lastRenderTime;
+
+      // 限制渲染频率，避免过度渲染
+      if (delta >= minRenderInterval) {
+        lastRenderTime = now;
+        controls.update();  // 更新控制器状态
+        renderer.render(scene, camera);
+      }
     }
 
     /**
@@ -466,6 +501,12 @@
           mats.forEach(function(m) { if (m) m.dispose(); });
         }
       });
+      // 清理边线资源
+      edgeLines.forEach(function(line) {
+        if (line.geometry) line.geometry.dispose();
+        if (line.material) line.material.dispose();
+      });
+      edgeLines.length = 0;
       currentModel = null;
     }
 
@@ -508,6 +549,10 @@
 
       // 保存模型高度，用于剖切面范围
       modelHeight = size.y;
+
+      // 更新网格和坐标轴大小以适应模型
+      updateGridAndAxis();
+
       // 更新剖切面滑动条范围（0-100对应Y轴0到modelHeight）
       const clipSlider = document.getElementById('clipSlider');
       if (clipSlider) {
@@ -539,6 +584,36 @@
       camera.top = maxDim * zoom;
       camera.bottom = -maxDim * zoom;
       camera.updateProjectionMatrix();
+    }
+
+    /**
+     * 更新网格和坐标轴大小以适应模型
+     */
+    function updateGridAndAxis() {
+      if (!grid || !axisHelper) return;
+
+      // 根据模型高度计算合适的大小
+      const size = Math.max(modelHeight, 200);
+
+      // 更新网格
+      scene.remove(grid);
+      grid.geometry.dispose();
+      grid.material.dispose();
+      grid = new THREE.GridHelper(size, size / 5, 0x808080, 0xcccccc);
+      grid.position.y = 0;
+      grid.material.opacity = 0.5;
+      grid.material.transparent = true;
+      grid.visible = document.getElementById('gridToggle')?.checked !== false;
+      scene.add(grid);
+
+      // 更新坐标轴
+      scene.remove(axisHelper);
+      axisHelper.geometry.dispose();
+      axisHelper.material.dispose();
+      axisHelper = new THREE.AxesHelper(size / 2);
+      axisHelper.position.y = 0.01;
+      axisHelper.visible = document.getElementById('axisToggle')?.checked !== false;
+      scene.add(axisHelper);
     }
 
     /**
@@ -654,7 +729,8 @@
         edgeLines.length = 0;
         object.traverse(function(child) {
           if (child.isMesh) {
-            var edges = new THREE.EdgesGeometry(child.geometry, 15);
+            // 提高角度阈值以减少边线数量，提升性能
+            var edges = new THREE.EdgesGeometry(child.geometry, 20);
             var line = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.5 }));
             child.add(line);
             edgeLines.push(line);
@@ -807,10 +883,58 @@
     var topViewBtn = document.getElementById('topViewBtn');
     var isoViewBtn = document.getElementById('isoViewBtn');
     var frontViewBtn = document.getElementById('frontViewBtn');
+    var reloadBtn = document.getElementById('reloadBtn');
 
     topViewBtn.addEventListener('click', setTopView);
     isoViewBtn.addEventListener('click', setIsoView);
     frontViewBtn.addEventListener('click', setFrontView);
+
+    // 重载模型按钮事件
+    reloadBtn.addEventListener('click', function() {
+      // 重置所有开关状态
+      var edgeToggle = document.getElementById('edgeToggle');
+      var shadowToggle = document.getElementById('shadowToggle');
+      var gridToggle = document.getElementById('gridToggle');
+      var axisToggle = document.getElementById('axisToggle');
+      var clipToggle = document.getElementById('clipToggle');
+
+      if (edgeToggle) edgeToggle.checked = true;
+      if (shadowToggle) shadowToggle.checked = false;
+      if (gridToggle) gridToggle.checked = true;
+      if (axisToggle) axisToggle.checked = true;
+      if (clipToggle) clipToggle.checked = false;
+
+      // 重置边线显示
+      edgeLines.forEach(function(line) {
+        line.visible = true;
+      });
+
+      // 重置阴影
+      renderer.shadowMap.enabled = false;
+      mainLight.castShadow = false;
+      if (currentModel) {
+        currentModel.traverse(function(child) {
+          if (child.isMesh) {
+            child.castShadow = false;
+            child.receiveShadow = false;
+          }
+        });
+      }
+
+      // 重置网格显示
+      if (grid) grid.visible = true;
+
+      // 重置坐标轴显示
+      if (axisHelper) axisHelper.visible = true;
+
+      // 重置剖切
+      clipEnabled = false;
+      var clipSliderBar = document.getElementById('clipSliderBar');
+      if (clipSliderBar) clipSliderBar.classList.remove('active');
+
+      // 重新加载模型
+      loadFromURL('model.glb');
+    });
 
     // 视图工具栏显示/隐藏切换
     var viewToolbar = document.getElementById('viewToolbar');
@@ -866,6 +990,14 @@
     gridToggle.addEventListener('change', function(e) {
       if (grid) {
         grid.visible = e.target.checked;
+      }
+    });
+
+    // 坐标轴开关事件
+    var axisToggle = document.getElementById('axisToggle');
+    axisToggle.addEventListener('change', function(e) {
+      if (axisHelper) {
+        axisHelper.visible = e.target.checked;
       }
     });
 
@@ -934,7 +1066,7 @@
 
     clipSlider.addEventListener('input', updateClipPlane);
 
-    // 初始化并自动加载model.glb
+    // 初始化并自动加载model.glb，可以加载多个模型
     init();
     loadFromURL('model.glb');
   </script>
