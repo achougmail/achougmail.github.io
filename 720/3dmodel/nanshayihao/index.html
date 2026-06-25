@@ -839,6 +839,8 @@
     fileInput.addEventListener('change', function(e) {
       var file = e.target.files && e.target.files[0];
       if (file) loadFromFile(file);
+      // 清空value，允许选择同一个文件
+      e.target.value = '';
     });
 
     // 点击logo切换工具栏显示/隐藏
