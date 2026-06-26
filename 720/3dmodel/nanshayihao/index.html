@@ -730,7 +730,7 @@
         object.traverse(function(child) {
           if (child.isMesh) {
             // 提高角度阈值以减少边线数量，提升性能
-            var edges = new THREE.EdgesGeometry(child.geometry, 20);
+            var edges = new THREE.EdgesGeometry(child.geometry, 15);
             var line = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.5 }));
             child.add(line);
             edgeLines.push(line);
