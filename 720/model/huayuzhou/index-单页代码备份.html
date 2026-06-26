@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>房产实勘员VR - 3D模型浏览器</title>
+  <link rel="stylesheet" href="../common/css/style.css" />
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+      "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+    }
+  }
+  </script>
+  <script type="module" src="../common/js/viewer-core.js"></script>
+  <script type="module" src="../common/js/viewer-model.js"></script>
+  <script type="module" src="../common/js/viewer-ui.js"></script>
+</head>
+<body>
+  <div id="container" data-model="model.glb"></div>
+
+  <div id="logo">
+    <img src="../common/images/logo.png" alt="logo" />
+  </div>
+
+  <div id="menuBtn">
+    <svg viewBox="0 0 24 24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+  </div>
+
+  <div id="viewToolbar">
+    <div id="reloadBtn" class="view-icon reload" title="重载模型">↻</div>
+    <div class="divider"></div>
+    <div id="isoViewBtn" class="view-icon" title="侧视图">侧</div>
+    <div class="divider"></div>
+    <div id="frontViewBtn" class="view-icon" title="正视图">正</div>
+    <div class="divider"></div>
+    <div id="topViewBtn" class="view-icon" title="顶视图">顶</div>
+  </div>
+
+  <div id="viewToolbarToggle">视图</div>
+
+  <div id="sidebar">
+    <label><input type="checkbox" id="edgeToggle" checked />边线</label>
+    <label><input type="checkbox" id="shadowToggle" />阴影</label>
+    <label><input type="checkbox" id="gridToggle" checked />网格</label>
+    <label><input type="checkbox" id="axisToggle" checked />坐标</label>
+    <label><input type="checkbox" id="perspectiveToggle" checked />透视</label>
+    <label><input type="checkbox" id="clipToggle" />剖切</label>
+  </div>
+
+  <div id="toolbar">
+    <button id="toolbarClose" title="关闭">×</button>
+    <div style="display: flex; flex-direction: column; gap: 6px;">
+      <label>加载模型：<input type="file" id="fileInput" accept=".glb,.gltf,.obj,.ply" /></label>
+      <span style="font-size: 11px; color: #aaa;">支持 .glb .gltf .obj .ply 格式</span>
+    </div>
+  </div>
+
+  <div id="clipSliderBar">
+    <span id="clipLabel">剖切</span>
+    <input type="range" id="clipSlider" min="0" max="100" value="0" step="0.1" />
+    <button id="edgeToggleBar" title="显示/隐藏边线">L</button>
+    <button id="clipToggleBar">×</button>
+  </div>
+
+  <div id="info">
+    <span class="desktop-hint">操作：左键旋转 · 右键平移 · 滚轮缩放</span>
+    <span class="mobile-hint">操作：单指旋转 · 两指平移 · 捏合缩放</span>
+    <br/>@Copyright 房产实勘员VR 2026 
+  </div>
+
+  <div id="loading">
+    <div class="spinner"></div>
+    <div id="loading-text">模型较大，请稍候…</div>
+    <div id="loading-sub"></div>
+    <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+  </div>
+
+  <div id="error"></div>
+</body>
+</html>
