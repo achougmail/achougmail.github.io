@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>房产实勘员VR</title>
+
+   <!-- CSS样式文件 -->
+   <link rel="stylesheet" href="css/base.css">
+   <link rel="stylesheet" href="css/main.css">
+
+   <!-- 页面特定样式 -->
+   <style>
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+    #mainFrame {
+      width: 100%;
+      height: 100%;
+      display: block;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 1;
+    }
+    .error {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: Arial, sans-serif;
+      color: #ff4444;
+      font-size: 16px;
+      text-align: center;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 8px;
+      z-index: 902;
+    }
+    header.main-header {
+      z-index: 1000;
+      background: #1d1d1d !important;
+    }
+    #menu-nav-wrap {
+      z-index: 1000;
+    }
+    .menu-toggle {
+      z-index: 1001;
+    }
+   </style>
+</head>
+<body>
+  <div id="preloader">
+    <div id="loader"></div>
+  </div>
+
+   <header class="main-header">
+   	
+   	<div class="logo">
+      <a href="index.html">房产实勘员VR</a>
+   </div> 
+
+   <a class="menu-toggle" href="#"><span>菜单</span></a>   	
+
+   </header>
+
+   <!-- main navigation 
+   ================================================== -->
+   <nav id="menu-nav-wrap">
+
+   	<h3>菜单</h3>   	
+		<ul class="nav-list">
+			<li><a href="index.html" title="">首页</a></li>
+			<li><a href="moreinfo.html" title="">功能介绍</a></li>
+			<li><a href="allproject.html" title="">项目展示</a></li>
+			<li><a href="moreinfo.html#pricing" title="">选择适合你的版本</a></li>
+			<li><a href="moreinfo.html#download" title="">客户端下载</a></li>	
+			<li><a href="https://720vr.pages.dev/" target="_blank" title="">航拍地图Web版</a></li>	
+			<li><a href="moreinfo.html#subscribe" title="">联系我们</a></li>			
+		</ul>
+		<H3>扫码直通服务通道</H3>
+		<img src="images/qcode-min.jpg" width="70%" height="70%">
+		<p><br>房产实勘员 2025-2026.</p>
+
+	</nav> <!-- /menu-nav-wrap -->
+
+  <div class="error" id="error" style="display: none;">未指定URL参数</div>
+  <iframe id="mainFrame" frameborder="0" allowfullscreen></iframe>
+
+   <script src="js/jquery-2.1.3.min.js"></script>
+   <script src="js/plugins.js"></script>
+   <script src="js/main.js"></script>
+
+  <script>
+    /**
+     * 解析URL参数
+     * @param {string} name - 参数名
+     * @returns {string|null} - 参数值
+     */
+    function getUrlParam(name) {
+      var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i');
+      var r = window.location.search.substr(1).match(reg);
+      if (r != null) {
+        return decodeURIComponent(r[2]);
+      }
+      return null;
+    }
+
+    /**
+     * 初始化iframe
+     */
+    function initFrame() {
+      var url = getUrlParam('url');
+      var preloader = document.getElementById('preloader');
+      var error = document.getElementById('error');
+      var iframe = document.getElementById('mainFrame');
+
+      if (!url) {
+        preloader.style.display = 'none';
+        error.style.display = 'block';
+        return;
+      }
+
+      if (url.indexOf('http://') !== 0 && url.indexOf('https://') !== 0) {
+        url = 'https://' + url;
+      }
+
+      iframe.src = url;
+
+      iframe.onload = function() {
+        preloader.style.display = 'none';
+      };
+
+      iframe.onerror = function() {
+        preloader.style.display = 'none';
+        error.textContent = '加载失败，请检查URL是否正确';
+        error.style.display = 'block';
+      };
+    }
+
+    initFrame();
+  </script>
+</body>
+</html>
